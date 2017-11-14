@@ -21,9 +21,10 @@ def run_sf( del_alpha, del_beta, mol, opts={'scf_type': 'pk', 'basis': 'sto-3g',
   # del_charge is the difference between total electrons
   del_charge = -(del_alpha + del_beta)
   mol.set_molecular_charge(mol.molecular_charge() + del_charge)
-  # multiplicity is the difference between alpha and beta
-  del_multiplicity = del_alpha - del_beta
-  mol.set_multiplicity(mol.multiplicity() + del_multiplicity)
+  # multiplicity is the difference between total alpha and beta
+  na = wfn_rohf.nalpha() + del_alpha
+  nb = wfn_rohf.nbeta() + del_beta
+  mol.set_multiplicity(max(na, nb) - min(na, nb) + 1)
   #
   # set up reference wfn to pass into detci
   # run RHF calculation to initialize soccpi, doccpi, nalpha, nbeta, etc.
