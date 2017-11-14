@@ -4,12 +4,14 @@ Code Author: Shannon Houck
 Updated: Nov 14, 2017
 
 Currently, the molecule and alpha/beta specifications are set in the input file.
-(Soon, there will be a Python implementation, but we want to be sure it works first!)
 
 To run a calculation, for example, on the septet state of N2, with -2a/+2b, 
-you would edit the bottom of the input.dat file like so:
+you would edit the input.dat file like so:
 
 ```
+import spinflip
+from spinflip import run_sf
+
 # setting up molecule
 n2 = psi4.core.Molecule.create_molecule_from_string("""
 0 7
