@@ -10,7 +10,7 @@ you would edit the input.dat file like so:
 
 ```
 import spinflip
-from spinflip import run_sf
+from spinflip import sf_cas, sf_ras
 
 # setting up molecule
 n2 = psi4.core.Molecule.create_molecule_from_string("""
@@ -22,7 +22,10 @@ symmetry c1
 da = -2 # change in alpha electron count
 db = 2 # change in beta electron count
 # running the spin-flip calculation
-run_sf( da, db, n2 )
+sf_cas( da, db, n2 )
 ```
+
+To run a SF calculation with the 1x space, you'd write  `sf_ras( da, db, 1, n2)` 
+in place of the sf_ras function call.
 
 The output from the calculation can be found in output.dat.
