@@ -1,5 +1,5 @@
 import spinflip
-from spinflip import sf_cas, sf_ras
+from spinflip import sf_cas
 
 # setting up molecule
 n2 = psi4.core.Molecule.create_molecule_from_string("""
@@ -9,9 +9,9 @@ N 0 0 2.5
 symmetry c1
 """)
 # set alpha and beta
-da = -3 # change in alpha electron count
-db = 3 # change in beta electron count
+charge = 0
+multiplicity = 3
 
 # running the spin-flip calculation
-sf_ras( da, db, n2, 1 )
+sf_cas( charge, multiplicity, n2, conf_space="" )
 
