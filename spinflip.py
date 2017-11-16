@@ -3,10 +3,6 @@ sys.path.insert(1, '/usr/local/psi4/lib')
 import psi4
 from psi4 import *
 
-# default options for the SF-CAS method
-# can be overwritten using additional_opts keyword when calling sf_cas
-opts = {'scf_type': 'pk', 'basis': 'cc-pvdz', 'reference': 'rohf', 'guess': 'sad', 'diis_start': 20, 'e_convergence': 1e-12, 'd_convergence':1e-12}
-
 # A method to run a spin-flip calculation
 # Params:
 #  new_charge - the target charge of the molecule
@@ -14,21 +10,24 @@ opts = {'scf_type': 'pk', 'basis': 'cc-pvdz', 'reference': 'rohf', 'guess': 'sad
 #  mol - molecule to run the calculation on
 #  conf_space - the configuration space to use ("" or "1x" currently supported)
 #  opts - additional options to pass into Psi4 (optional)
-def sf_cas( new_charge, new_multiplicity, mol, conf_space="", add_opts={} ):
+def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={} ):
   # update options to include any additional opts from the user
+  opts = {'scf_type': 'pk', 'basis': 'cc-pvdz', 'reference': 'rohf', 'guess': 'sad', 'diis_start': 20, 'e_convergence': 1e-12, 'd_convergence':1e-12, 'mixed': False}
   opts.update(add_opts)
   if(conf_space == ""):
     print("SF-CAS CALCULATION")
   else:
-    print("SF-CAS($conf_space) CALCULATION")
+    print("SF-CAS(%s) CALCULATION" % conf_space)
   # run rohf calculation on reference state
-  print("RUNNING REFERENCE...\tCHARGE %i\tMULT %i" %(mol.molecular_charge(), mol.multiplicity()))
+  print("RUNNING REFERENCE...\tCHARGE %i\tMULT %i" %(ref_mol.molecular_charge(), ref_mol.multiplicity()))
   psi4.set_options(opts)
-  e_rohf, wfn_rohf = energy('scf', molecule=mol, return_wfn=True, options=opts)
-  print("SCF (%i %i): %6.12f" %(mol.molecular_charge(), mol.multiplicity(), e_rohf))
+  e_rohf, wfn_rohf = energy('scf', molecule=ref_mol, return_wfn=True, options=opts)
+  print("SCF (%i %i): %6.12f" %(ref_mol.molecular_charge(), ref_mol.multiplicity(), e_rohf))
   #
   # change charge and multiplicity to new target values
   print("DOING SPIN-FLIP: CHARGE %i, MULTIPLICITY %i" % (new_charge, new_multiplicity))
+  # copy molecule so original molecule passed in is unchanged
+  mol = ref_mol.clone()
   mol.set_molecular_charge(new_charge)
   mol.set_multiplicity(new_multiplicity)
   #
@@ -53,7 +52,17 @@ def sf_cas( new_charge, new_multiplicity, mol, conf_space="", add_opts={} ):
     opts.update({'ex_level': 1})
     opts.update({'ras1': [wfn_rohf.doccpi()[0]]})
     opts.update({'ras2': [wfn_rohf.soccpi()[0]]})
-    opts.update({'ras3': [wfn_rohf.frzvpi()[0]]})
+    opts.update({'ras3': [wfn_rohf.nmo() - wfn_rohf.soccpi()[0] - wfn_rohf.doccpi()[0]]})
+    #opts.update({'ras3': [0]})
+    opts.update({'ras4': [0]})
+  elif(conf_space == "2x"):
+    opts.update({'frozen_docc': [0]})
+    opts.update({'ex_level': 2})
+    opts.update({'ex_allow': [0, 1]})
+    opts.update({'ras1': [wfn_rohf.doccpi()[0]]})
+    opts.update({'ras2': [wfn_rohf.soccpi()[0]]})
+    #opts.update({'ras3': [wfn_rohf.frzvpi()[0]]})
+    opts.update({'ras3': [wfn_rohf.nmo() - wfn_rohf.soccpi()[0] - wfn_rohf.doccpi()[0]]})
     opts.update({'ras4': [0]})
   else:
     print("Configuration space $conf_space not supported. Exiting...")
