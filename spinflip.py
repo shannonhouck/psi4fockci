@@ -53,7 +53,6 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={} ):
     opts.update({'ras1': [wfn_rohf.doccpi()[0]]})
     opts.update({'ras2': [wfn_rohf.soccpi()[0]]})
     opts.update({'ras3': [wfn_rohf.nmo() - wfn_rohf.soccpi()[0] - wfn_rohf.doccpi()[0]]})
-    #opts.update({'ras3': [0]})
     opts.update({'ras4': [0]})
   elif(conf_space == "2x"):
     opts.update({'frozen_docc': [0]})
@@ -61,7 +60,6 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={} ):
     opts.update({'ex_allow': [0, 1]})
     opts.update({'ras1': [wfn_rohf.doccpi()[0]]})
     opts.update({'ras2': [wfn_rohf.soccpi()[0]]})
-    #opts.update({'ras3': [wfn_rohf.frzvpi()[0]]})
     opts.update({'ras3': [wfn_rohf.nmo() - wfn_rohf.soccpi()[0] - wfn_rohf.doccpi()[0]]})
     opts.update({'ras4': [0]})
   else:
