@@ -5,12 +5,12 @@ Updated: Nov 14, 2017
 
 Currently, the molecule and alpha/beta specifications are set in the input file.
 
-To run a calculation, for example, on the septet state of N2, with -2a/+2b, 
-you would edit the input.dat file like so:
+To run an SF-CAS/STO-3G calculation, for example, on the septet state of N2,
+ with -2a/+2b, you would edit the input.dat file like so:
 
 ```
 import spinflip
-from spinflip import sf_cas, sf_cas1
+from spinflip import sf_cas
 
 # setting up molecule
 n2 = psi4.core.Molecule.create_molecule_from_string("""
@@ -19,13 +19,20 @@ N 0 0 0
 N 0 0 2.5
 symmetry c1
 """)
+
+# set target charge and multiplicity
 charge = 0
-multiplicity = 1
-# running the spin-flip calculation
-sf_cas( da, db, n2 )
+multiplicity = 3
+
+# set up additional options
+options = {"basis": "sto-3g"}
+
+# run SF-CAS
+sf_cas( charge, multiplicity, n2, conf_space="" , add_opts=options)
 ```
 
-To run a SF calculation with the 1x space, you'd write  `sf_cas1( da, db, 1, n2)` 
-in place of the sf_cas function call.
+To run a SF-CAS(1x), you set the conf_space variable; so, one
+would write `sf_cas( charge, multiplicity, n2, conf_space="1x" )` 
+in place of the sf_cas function call above.
 
 The output from the calculation can be found in output.dat.

@@ -3,14 +3,20 @@ sys.path.insert(1, '/usr/local/psi4/lib')
 import psi4
 from psi4 import *
 
+# default options for the SF-CAS method
+# can be overwritten using additional_opts keyword when calling sf_cas
+opts = {'scf_type': 'pk', 'basis': 'cc-pvdz', 'reference': 'rohf', 'guess': 'sad', 'diis_start': 20, 'e_convergence': 1e-12, 'd_convergence':1e-12}
+
 # A method to run a spin-flip calculation
 # Params:
-#  conf_space - the configuration space to use ("" or "1x" currently supported)
 #  new_charge - the target charge of the molecule
 #  new_multiplicity - the target multiplicity of the molecule
 #  mol - molecule to run the calculation on
-#  opts - the options to pass into Psi4 (optional)
-def sf_cas( new_charge, new_multiplicity, mol, conf_space="", opts={'scf_type': 'pk', 'basis': 'sto-3g', 'reference': 'rohf', 'guess': 'sad', 'diis_start': 20, 'e_convergence': 1e-12, 'd_convergence':1e-12} ):
+#  conf_space - the configuration space to use ("" or "1x" currently supported)
+#  opts - additional options to pass into Psi4 (optional)
+def sf_cas( new_charge, new_multiplicity, mol, conf_space="", add_opts={} ):
+  # update options to include any additional opts from the user
+  opts.update(add_opts)
   if(conf_space == ""):
     print("SF-CAS CALCULATION")
   else:

@@ -8,10 +8,11 @@ N 0 0 0
 N 0 0 2.5
 symmetry c1
 """)
-# set alpha and beta
+# set target charge and multiplicity
 charge = 0
 multiplicity = 3
 
 # running the spin-flip calculation
-sf_cas( charge, multiplicity, n2, conf_space="" )
+options = {"basis": "sto-3g"}
+sf_cas( charge, multiplicity, n2, conf_space="" , add_opts=options)
 
