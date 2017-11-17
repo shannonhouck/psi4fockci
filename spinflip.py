@@ -12,6 +12,7 @@ from psi4 import *
 #  opts - additional options to pass into Psi4 (optional)
 def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={} ):
   # update options to include any additional opts from the user
+  psi4.core.clean()
   opts = {'scf_type': 'pk', 'basis': 'cc-pvdz', 'reference': 'rohf', 'guess': 'sad', 'diis_start': 20, 'e_convergence': 1e-12, 'd_convergence':1e-12, 'mixed': False}
   opts.update(add_opts)
   if(conf_space == ""):

@@ -36,11 +36,11 @@ def test_3():
   expected = -107.112752304674
   assert (e - expected) < threshold
 
-# Test: SF-CAS/CC-PVDZ with N2 (0,7 to -1,2)
-#  Test currently broken, even though the case works
-#  in input.dat. Fix this later!
+# Test: SF-CAS/CC-PVDZ with N2 (0,7 to 0,1)
+# Don't have a reference value for this one yet!!
 #def test_4():
-#  e = sf_cas( 0, 3, n2 )
-#  expected = -108.777084069057
+#  options = {"basis": "cc-pvdz"}
+#  e = sf_cas( 0, 1, n2 )
+#  expected = ???
 #  assert (e - expected) < threshold
 
