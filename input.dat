@@ -13,7 +13,6 @@ charge = 0
 multiplicity = 1
 
 # running the spin-flip calculation
-#options = {"basis": "sto-3g"}
-#sf_cas( charge, multiplicity, n2, conf_space="1x", add_opts=options )
-sf_cas( charge, multiplicity, n2, conf_space="1x" )
+options = {"basis": "sto-3g"}
+sf_cas( charge, multiplicity, n2, conf_space="1x", add_opts=options )
 

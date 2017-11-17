@@ -28,7 +28,7 @@ multiplicity = 3
 options = {"basis": "sto-3g"}
 
 # run SF-CAS
-sf_cas( charge, multiplicity, n2, conf_space="" , add_opts=options)
+e = sf_cas( charge, multiplicity, n2, conf_space="" , add_opts=options)
 ```
 
 To run a SF-CAS(1x), you set the conf_space variable; so, one
