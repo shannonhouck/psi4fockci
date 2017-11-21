@@ -12,7 +12,7 @@ from psi4 import *
 #  opts - additional options to pass into Psi4 (optional)
 def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={} ):
   # update options to include any additional opts from the user
-  psi4.core.clean()
+  psi4.core.clean() # cleanup (in case Psi4 has been run before)
   opts = {'scf_type': 'pk', 'basis': 'cc-pvdz', 'reference': 'rohf', 'guess': 'sad', 'diis_start': 20, 'e_convergence': 1e-12, 'd_convergence':1e-12, 'mixed': False}
   opts.update(add_opts)
   if(conf_space == ""):
@@ -48,23 +48,42 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={} ):
     opts.update({'ras2': [wfn_rohf.soccpi()[0]]})
     opts.update({'ras3': [0]})
     opts.update({'ras4': [0]})
+  #elif(conf_space == "S"):
+  #  opts.update({'frozen_docc': [0]})
+  #  opts.update({'ex_level': 1})
+  #  opts.update({'ex_allow': [0]})
+  #  opts.update({'ras1': [wfn_rohf.doccpi()[0]]})
+  #  opts.update({'ras2': [wfn_rohf.soccpi()[0]]})
+  #  opts.update({'ras3': [wfn_rohf.nmo() - wfn_rohf.soccpi()[0] - wfn_rohf.doccpi()[0]]})
+  #  opts.update({'ras4': [0]})
   elif(conf_space == "1x"):
+    opts.update({'frozen_docc': [0]})
+    opts.update({'ex_level': 0})
+    #opts.update({'ex_allow': [0]})
+    opts.update({'val_ex_level': 1})
+    opts.update({'ras3_max': 1})
+    opts.update({'ras1': [wfn_rohf.doccpi()[0]]})
+    opts.update({'ras2': [wfn_rohf.soccpi()[0]]})
+    opts.update({'ras3': [wfn_rohf.nmo() - wfn_rohf.soccpi()[0] - wfn_rohf.doccpi()[0]]})
+    opts.update({'ras4': [0]})
+  #elif(conf_space == "2x"):
+  #  opts.update({'frozen_docc': [0]})
+  #  opts.update({'ex_level': 2})
+  #  opts.update({'ex_allow': [0, 1]})
+  #  opts.update({'val_ex_level': 1})
+  #  opts.update({'ras1': [wfn_rohf.doccpi()[0]]})
+  #  opts.update({'ras2': [wfn_rohf.soccpi()[0]]})
+  #  opts.update({'ras3': [wfn_rohf.nmo() - wfn_rohf.soccpi()[0] - wfn_rohf.doccpi()[0]]})
+  #  opts.update({'ras4': [0]})
+  elif(conf_space == "xcis"):
     opts.update({'frozen_docc': [0]})
     opts.update({'ex_level': 1})
     opts.update({'ras1': [wfn_rohf.doccpi()[0]]})
     opts.update({'ras2': [wfn_rohf.soccpi()[0]]})
     opts.update({'ras3': [wfn_rohf.nmo() - wfn_rohf.soccpi()[0] - wfn_rohf.doccpi()[0]]})
     opts.update({'ras4': [0]})
-  elif(conf_space == "2x"):
-    opts.update({'frozen_docc': [0]})
-    opts.update({'ex_level': 2})
-    opts.update({'ex_allow': [0, 1]})
-    opts.update({'ras1': [wfn_rohf.doccpi()[0]]})
-    opts.update({'ras2': [wfn_rohf.soccpi()[0]]})
-    opts.update({'ras3': [wfn_rohf.nmo() - wfn_rohf.soccpi()[0] - wfn_rohf.doccpi()[0]]})
-    opts.update({'ras4': [0]})
   else:
-    print("Configuration space $conf_space not supported. Exiting...")
+    print("Configuration space %s not supported. Exiting..." % conf_space)
     exit()
   #
   # run cas
@@ -72,5 +91,6 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={} ):
   psi4.set_options(opts)
   e_cas, wfn_cas = energy('detci', ref_wfn=wfn_rohf_new, return_wfn=True, molecule=mol)
   print("CAS (%i %i): %6.12f" %(mol.molecular_charge(), mol.multiplicity(), e_cas))
+  psi4.core.clean_options() # more cleanup
   return e_cas
 
