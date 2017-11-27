@@ -85,6 +85,7 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={} ):
   else:
     print("Configuration space %s not supported. Exiting..." % conf_space)
     exit()
+
   #
   # run cas
   print("RUNNING CAS...\t\tCHARGE %i\tMULT %i" %(mol.molecular_charge(), mol.multiplicity()))
