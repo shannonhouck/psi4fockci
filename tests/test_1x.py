@@ -1,5 +1,4 @@
 import sys, os
-sys.path.insert(1, '/usr/local/psi4/lib')
 import psi4
 sys.path.insert(1, '../')
 import spinflip
