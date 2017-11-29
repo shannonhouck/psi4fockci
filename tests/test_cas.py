@@ -6,7 +6,7 @@ import spinflip
 from spinflip import sf_cas
 
 # threshold for value equality
-threshold = 1e-9
+threshold = 1e-7
 # setting up molecule
 n2 = psi4.core.Molecule.create_molecule_from_string("""
 0 7
