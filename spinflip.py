@@ -58,14 +58,21 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={} ):
     mol.set_multiplicity(new_multiplicity)
 
     # set up reference wfn to pass into detci
-    # run RHF calculation to initialize soccpi, doccpi, nalpha, nbeta, etc.
-    psi4.set_options(opts)
-    e_rohf_new, wfn_rohf_new = energy('scf', molecule=mol, return_wfn=True, options=opts)
-
-    # fill wfn with values from reference calculation
-    wfn_rohf_new.Ca().copy(wfn_rohf.Ca())
-    wfn_rohf_new.Cb().copy(wfn_rohf.Cb())
-    wfn_rohf_new.H().copy(wfn_rohf.H())
+    #wfn_rohf_new = psi4.core.Wavefunction.build(mol, psi4.core.BasisSet.build(mol))
+    wfn_rohf_new = psi4.core.ROHF.build(mol, psi4.core.BasisSet.build(mol))
+    #psi4.core.ROHF.initialize(psi4.core.ROHF.build(mol, psi4.core.BasisSet.build(mol)))
+    wfn_rohf_new.set_array('Ca', wfn_rohf.Ca())
+    wfn_rohf_new.set_array('Cb', wfn_rohf.Cb())
+    wfn_rohf_new.set_array('H', wfn_rohf.H())
+    # calculate soccpi, doccpi
+    n_soccpi = mol.multiplicity()-1
+    wfn_rohf_new.soccpi()[0] = n_soccpi
+    print(wfn_rohf_new.soccpi()[0])
+    
+    del_electrons = ref_mol.molecular_charge() - mol.molecular_charge()
+    n_total = wfn_rohf.nalpha() + wfn_rohf.nbeta() + del_electrons
+    wfn_rohf_new.doccpi()[0] = n_total - n_soccpi
+    print(wfn_rohf_new.doccpi()[0])
 
     # set active space and docc space based on configuration space input
     if(conf_space == ""):
@@ -102,6 +109,7 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={} ):
     else:
       print("Configuration space %s not supported. Exiting..." % conf_space)
       exit()
+    print(opts)
 
     # run cas
     print("RUNNING CAS...\t\tCHARGE %i\tMULT %i" %(mol.molecular_charge(), mol.multiplicity()))
