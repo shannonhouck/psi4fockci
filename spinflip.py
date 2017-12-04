@@ -3,7 +3,7 @@ sys.path.insert(1, '/usr/local/psi4/lib')
 import psi4
 from psi4 import *
 
-def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={} ):
+def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, run_ref=True ):
     """
     A method to run a spin-flip electron addition calculation.
 
@@ -38,16 +38,23 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={} ):
             'diis_start': 20,
             'e_convergence': 1e-10,
             'd_convergence': 1e-10,
+            'guess_Vector': 'unit',
+            'maxiter': 500,
             'mixed': False}
     opts.update(add_opts) # add additional options from user
 
-    # run rohf calculation on reference state
-    print("RUNNING REFERENCE...\tCHARGE %i\tMULT %i" %(ref_mol.molecular_charge(), ref_mol.multiplicity()))
-    psi4.core.clean() # cleanup (in case Psi4 has been run before)
-    psi4.set_options(opts)
-    e_rohf, wfn_rohf = energy('scf', molecule=ref_mol, return_wfn=True, options=opts)
-    psi4.core.print_variables()
-    print("SCF (%i %i): %6.12f" %(ref_mol.molecular_charge(), ref_mol.multiplicity(), e_rohf))
+    # if we have to run the reference...
+    if(run_ref):
+        # run rohf calculation on reference state
+        print("RUNNING REFERENCE...\tCHARGE %i\tMULT %i" %(ref_mol.molecular_charge(), ref_mol.multiplicity()))
+        psi4.core.clean() # cleanup (in case Psi4 has been run before)
+        psi4.set_options(opts)
+        e_rohf, wfn_rohf = energy('scf', molecule=ref_mol, return_wfn=True, options=opts)
+        np.save("Ca.npy", psi4.core.Matrix.to_array(wfn_rohf.Ca(), copy=True))
+        np.save("Cb.npy", psi4.core.Matrix.to_array(wfn_rohf.Cb(), copy=True))
+        np.save("H.npy", psi4.core.Matrix.to_array(wfn_rohf.H(), copy=True))
+        np.save("occ_counts.npy", [wfn_rohf.soccpi()[0], wfn_rohf.doccpi()[0], wfn_rohf.nmo()])
+        print("SCF (%i %i): %6.12f" %(ref_mol.molecular_charge(), ref_mol.multiplicity(), e_rohf))
 
     # change charge and multiplicity to new target values
     print("DOING SPIN-FLIP: CHARGE %i, MULTIPLICITY %i" % (new_charge, new_multiplicity))
@@ -60,35 +67,43 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={} ):
     # set up reference wfn to pass into detci
     # run RHF calculation to initialize soccpi, doccpi, nalpha, nbeta, etc.
     psi4.set_options(opts)
-    e_rohf_new, wfn_rohf_new = energy('scf', molecule=mol, return_wfn=True, options=opts)
+    psi4.set_options({'e_convergence': 1e-3, 'd_convergence': 1e-3})
+    e_rohf_new, wfn_rohf_new = energy('scf', molecule=mol, return_wfn=True)
 
     # fill wfn with values from reference calculation
-    wfn_rohf_new.Ca().copy(wfn_rohf.Ca())
-    wfn_rohf_new.Cb().copy(wfn_rohf.Cb())
-    wfn_rohf_new.H().copy(wfn_rohf.H())
+    #wfn_rohf_new.Ca().copy(wfn_rohf.Ca())
+    #wfn_rohf_new.Cb().copy(wfn_rohf.Cb())
+    #wfn_rohf_new.H().copy(wfn_rohf.H())
+    wfn_rohf_new.Ca().copy(psi4.core.Matrix.from_array(np.load("Ca.npy")))
+    wfn_rohf_new.Cb().copy(psi4.core.Matrix.from_array(np.load("Cb.npy")))
+    wfn_rohf_new.H().copy(psi4.core.Matrix.from_array(np.load("H.npy")))
+    occ_counts = np.load("occ_counts.npy")
+    soccpi = occ_counts[0]
+    doccpi = occ_counts[1]
+    nmo = occ_counts[2]
 
     # set active space and docc space based on configuration space input
     if(conf_space == ""):
-      opts.update({'frozen_docc': [wfn_rohf.doccpi()[0]]})
+      opts.update({'frozen_docc': [doccpi]})
       opts.update({'ras1': [0]})
-      opts.update({'ras2': [wfn_rohf.soccpi()[0]]})
+      opts.update({'ras2': [soccpi]})
       opts.update({'ras3': [0]})
       opts.update({'ras4': [0]})
     elif(conf_space == "S" or conf_space == "xcis"):
       opts.update({'frozen_docc': [0]})
       opts.update({'ex_level': 1})
-      opts.update({'ras1': [wfn_rohf.doccpi()[0]]})
-      opts.update({'ras2': [wfn_rohf.soccpi()[0]]})
-      opts.update({'ras3': [wfn_rohf.nmo() - wfn_rohf.soccpi()[0] - wfn_rohf.doccpi()[0]]})
+      opts.update({'ras1': [doccpi]})
+      opts.update({'ras2': [soccpi]})
+      opts.update({'ras3': [nmo - soccpi - doccpi()]})
       opts.update({'ras4': [0]})
     elif(conf_space == "1x"):
       opts.update({'frozen_docc': [0]})
       opts.update({'ex_level': 0})
       opts.update({'val_ex_level': 1})
       opts.update({'ras3_max': 1})
-      opts.update({'ras1': [wfn_rohf.doccpi()[0]]})
-      opts.update({'ras2': [wfn_rohf.soccpi()[0]]})
-      opts.update({'ras3': [wfn_rohf.nmo() - wfn_rohf.soccpi()[0] - wfn_rohf.doccpi()[0]]})
+      opts.update({'ras1': [doccpi]})
+      opts.update({'ras2': [soccpi]})
+      opts.update({'ras3': [nmo - soccpi - doccpi]})
       opts.update({'ras4': [0]})
     #elif(conf_space == "2x"):
     #  opts.update({'frozen_docc': [0]})
