@@ -36,8 +36,8 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={} ):
             'reference': 'rohf',
             'guess': 'sad',
             'diis_start': 20,
-            'e_convergence': 1e-12,
-            'd_convergence': 1e-12,
+            'e_convergence': 1e-10,
+            'd_convergence': 1e-10,
             'mixed': False}
     opts.update(add_opts) # add additional options from user
 
