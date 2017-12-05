@@ -38,49 +38,47 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
             'diis_start': 20,
             'e_convergence': 1e-10,
             'd_convergence': 1e-10,
-            'guess_Vector': 'unit',
             'maxiter': 500,
+            'ci_maxiter': 50,
             'mixed': False}
     opts.update(add_opts) # add additional options from user
 
-    # if we have to run the reference...
-    if(run_ref):
-        # run rohf calculation on reference state
-        print("RUNNING REFERENCE...\tCHARGE %i\tMULT %i" %(ref_mol.molecular_charge(), ref_mol.multiplicity()))
-        psi4.core.clean() # cleanup (in case Psi4 has been run before)
-        psi4.set_options(opts)
-        e_rohf, wfn_rohf = energy('scf', molecule=ref_mol, return_wfn=True, options=opts)
-        np.save("Ca.npy", psi4.core.Matrix.to_array(wfn_rohf.Ca(), copy=True))
-        np.save("Cb.npy", psi4.core.Matrix.to_array(wfn_rohf.Cb(), copy=True))
-        np.save("H.npy", psi4.core.Matrix.to_array(wfn_rohf.H(), copy=True))
-        np.save("occ_counts.npy", [wfn_rohf.soccpi()[0], wfn_rohf.doccpi()[0], wfn_rohf.nmo()])
-        print("SCF (%i %i): %6.12f" %(ref_mol.molecular_charge(), ref_mol.multiplicity(), e_rohf))
+    # run rohf calculation on reference state
+    print("RUNNING REFERENCE...\tCHARGE %i\tMULT %i" %(ref_mol.molecular_charge(), ref_mol.multiplicity()))
+    psi4.core.clean() # cleanup (in case Psi4 has been run before)
+    psi4.set_options(opts)
+    mol = ref_mol.clone()
+    e_rohf, wfn_rohf = energy('scf', molecule=mol, return_wfn=True, options=opts)
+    print("SCF (%i %i): %6.12f" %(mol.molecular_charge(), mol.multiplicity(), e_rohf))
 
     # change charge and multiplicity to new target values
     print("DOING SPIN-FLIP: CHARGE %i, MULTIPLICITY %i" % (new_charge, new_multiplicity))
 
     # copy molecule so original molecule passed in is unchanged
-    mol = ref_mol.clone()
     mol.set_molecular_charge(new_charge)
     mol.set_multiplicity(new_multiplicity)
 
     # set up reference wfn to pass into detci
     # run RHF calculation to initialize soccpi, doccpi, nalpha, nbeta, etc.
-    psi4.set_options(opts)
-    psi4.set_options({'e_convergence': 1e-3, 'd_convergence': 1e-3})
-    e_rohf_new, wfn_rohf_new = energy('scf', molecule=mol, return_wfn=True)
+    #psi4.set_options(opts)
+    #psi4.set_options({'e_convergence': 1e-6, 'd_convergence': 1e-6})
+    #e_rohf_new, wfn_rohf_new = energy('scf', molecule=ref_mol, return_wfn=True)
+    #print(wfn_rohf.variables())
+    #print(wfn_rohf_new.variables())
 
     # fill wfn with values from reference calculation
     #wfn_rohf_new.Ca().copy(wfn_rohf.Ca())
     #wfn_rohf_new.Cb().copy(wfn_rohf.Cb())
     #wfn_rohf_new.H().copy(wfn_rohf.H())
-    wfn_rohf_new.Ca().copy(psi4.core.Matrix.from_array(np.load("Ca.npy")))
-    wfn_rohf_new.Cb().copy(psi4.core.Matrix.from_array(np.load("Cb.npy")))
-    wfn_rohf_new.H().copy(psi4.core.Matrix.from_array(np.load("H.npy")))
-    occ_counts = np.load("occ_counts.npy")
-    soccpi = occ_counts[0]
-    doccpi = occ_counts[1]
-    nmo = occ_counts[2]
+    doccpi = wfn_rohf.doccpi()[0]
+    soccpi = wfn_rohf.soccpi()[0]
+    nmo = wfn_rohf.nmo()
+
+    new_soccpi = mol.multiplicity() - 1
+    wfn_rohf.set_soccpi(psi4.core.Dimension([new_soccpi]))
+    del_electrons = ref_mol.molecular_charge() - mol.molecular_charge()
+    n_total = wfn_rohf.nalpha() + wfn_rohf.nbeta() + del_electrons
+    wfn_rohf.set_doccpi(psi4.core.Dimension([(n_total - new_soccpi)/2]))
 
     # set active space and docc space based on configuration space input
     if(conf_space == ""):
@@ -94,7 +92,7 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
       opts.update({'ex_level': 1})
       opts.update({'ras1': [doccpi]})
       opts.update({'ras2': [soccpi]})
-      opts.update({'ras3': [nmo - soccpi - doccpi()]})
+      opts.update({'ras3': [nmo - soccpi - doccpi]})
       opts.update({'ras4': [0]})
     elif(conf_space == "1x"):
       opts.update({'frozen_docc': [0]})
@@ -121,7 +119,7 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
     # run cas
     print("RUNNING CAS...\t\tCHARGE %i\tMULT %i" %(mol.molecular_charge(), mol.multiplicity()))
     psi4.set_options(opts)
-    e_cas, wfn_cas = energy('detci', ref_wfn=wfn_rohf_new, return_wfn=True, molecule=mol)
+    e_cas, wfn_cas = energy('detci', ref_wfn=wfn_rohf, return_wfn=True, molecule=mol)
     print("CAS (%i %i): %6.12f" %(mol.molecular_charge(), mol.multiplicity(), e_cas))
     psi4.core.print_variables()
     psi4.core.clean_options() # more cleanup

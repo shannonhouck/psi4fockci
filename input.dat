@@ -16,16 +16,16 @@ symmetry c1
 """)
 # set target charge and multiplicity
 charge = 0
-multiplicity = 1
+multiplicity = 3
 
 # running the spin-flip calculation
 #opts = {'basis': 'cc-pvdz', 'num_roots': 2}
-opts = {'basis': 'cc-pvdz', 'num_roots': 2, 'scf_type': 'DIRECT'}
+opts = {'basis': 'cc-pvdz', 'num_roots': 4}
 #opts = {'basis': 'sto-3g'}
 #e = sf_cas( 0, 1, n2, add_opts=opts )
 #e = sf_cas( 0, 1, n2, conf_space="", add_opts=opts )
 #e = sf_cas( 0, 1, o2, conf_space="S", add_opts=opts )
-e = sf_cas( charge, multiplicity, n2, conf_space="1x", add_opts=opts, run_ref=False )
+e = sf_cas( charge, multiplicity, n2, conf_space="", add_opts=opts )
 #e = sf_cas( 0, 1, o2, conf_space="2x", add_opts=opts )
 #e = sf_cas( 0, 1, n2, conf_space="xcis", add_opts=opts )
 
