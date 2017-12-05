@@ -46,8 +46,10 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
     # run rohf calculation on reference state
     print("RUNNING REFERENCE...\tCHARGE %i\tMULT %i" %(ref_mol.molecular_charge(), ref_mol.multiplicity()))
     psi4.core.clean() # cleanup (in case Psi4 has been run before)
+    #psi4_io.set_specific_path(PSIF_SCF_MOS, './')
+    #psi4_io.set_Specific_retention(PSIF_SCF_MOS, True)
     psi4.set_options(opts)
-    mol = ref_mol.clone()
+    mol = ref_mol.clone() # clone molecule so original isn't modified
     e_rohf, wfn_rohf = energy('scf', molecule=mol, return_wfn=True, options=opts)
     print("SCF (%i %i): %6.12f" %(mol.molecular_charge(), mol.multiplicity(), e_rohf))
 
@@ -74,11 +76,13 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
     soccpi = wfn_rohf.soccpi()[0]
     nmo = wfn_rohf.nmo()
 
+    # doccpi
     new_soccpi = mol.multiplicity() - 1
-    wfn_rohf.set_soccpi(psi4.core.Dimension([new_soccpi]))
     del_electrons = ref_mol.molecular_charge() - mol.molecular_charge()
     n_total = wfn_rohf.nalpha() + wfn_rohf.nbeta() + del_electrons
-    wfn_rohf.set_doccpi(psi4.core.Dimension([(n_total - new_soccpi)/2]))
+    wfn_rohf.force_doccpi(psi4.core.Dimension([(n_total - new_soccpi)/2]))
+    # soccpi
+    wfn_rohf.force_soccpi(psi4.core.Dimension([new_soccpi]))
 
     # set active space and docc space based on configuration space input
     if(conf_space == ""):
