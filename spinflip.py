@@ -46,12 +46,14 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
     # run rohf calculation on reference state
     print("RUNNING REFERENCE...\tCHARGE %i\tMULT %i" %(ref_mol.molecular_charge(), ref_mol.multiplicity()))
     psi4.core.clean() # cleanup (in case Psi4 has been run before)
-    #psi4_io.set_specific_path(PSIF_SCF_MOS, './')
-    #psi4_io.set_Specific_retention(PSIF_SCF_MOS, True)
+    # storing MOs (in case we need to restart the job)
     psi4.set_options(opts)
     mol = ref_mol.clone() # clone molecule so original isn't modified
     e_rohf, wfn_rohf = energy('scf', molecule=mol, return_wfn=True, options=opts)
     print("SCF (%i %i): %6.12f" %(mol.molecular_charge(), mol.multiplicity(), e_rohf))
+
+    wfn_rohf.nalphapi().print_out()
+    wfn_rohf.nbetapi().print_out()
 
     # change charge and multiplicity to new target values
     print("DOING SPIN-FLIP: CHARGE %i, MULTIPLICITY %i" % (new_charge, new_multiplicity))
@@ -61,27 +63,18 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
     mol.set_multiplicity(new_multiplicity)
 
     # set up reference wfn to pass into detci
-    # run RHF calculation to initialize soccpi, doccpi, nalpha, nbeta, etc.
-    #psi4.set_options(opts)
-    #psi4.set_options({'e_convergence': 1e-6, 'd_convergence': 1e-6})
-    #e_rohf_new, wfn_rohf_new = energy('scf', molecule=ref_mol, return_wfn=True)
-    #print(wfn_rohf.variables())
-    #print(wfn_rohf_new.variables())
-
-    # fill wfn with values from reference calculation
-    #wfn_rohf_new.Ca().copy(wfn_rohf.Ca())
-    #wfn_rohf_new.Cb().copy(wfn_rohf.Cb())
-    #wfn_rohf_new.H().copy(wfn_rohf.H())
+    # save orbital values from reference calculation
     doccpi = wfn_rohf.doccpi()[0]
     soccpi = wfn_rohf.soccpi()[0]
     nmo = wfn_rohf.nmo()
 
-    # doccpi
+    # calculate soccpi and doccpi
     new_soccpi = mol.multiplicity() - 1
     del_electrons = ref_mol.molecular_charge() - mol.molecular_charge()
     n_total = wfn_rohf.nalpha() + wfn_rohf.nbeta() + del_electrons
     wfn_rohf.force_doccpi(psi4.core.Dimension([(n_total - new_soccpi)/2]))
-    # soccpi
+    # set orbital occupations
+    wfn_rohf.force_doccpi(psi4.core.Dimension([(n_total - new_soccpi)/2]))
     wfn_rohf.force_soccpi(psi4.core.Dimension([new_soccpi]))
 
     # set active space and docc space based on configuration space input
