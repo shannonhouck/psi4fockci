@@ -3,7 +3,7 @@ sys.path.insert(1, '/usr/local/psi4/lib')
 import psi4
 from psi4 import *
 
-def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={} ):
+def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, ref_rohf_wfn="NONE", return_rohf_wfn=False, return_rohf_e=False ):
     """
     A method to run a spin-flip electron addition calculation.
 
@@ -36,9 +36,7 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={} ):
             'reference': 'rohf',
             'guess': 'sad',
             'diis_start': 20,
-            'e_convergence': 1e-10,
-            'd_convergence': 1e-10,
-            'maxiter': 500,
+            'maxiter': 1000,
             'ci_maxiter': 50,
             'mixed': False}
     opts.update(add_opts) # add additional options from user
@@ -49,11 +47,11 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={} ):
     # storing MOs (in case we need to restart the job)
     psi4.set_options(opts)
     mol = ref_mol.clone() # clone molecule so original isn't modified
-    e_rohf, wfn_rohf = energy('scf', molecule=mol, return_wfn=True, options=opts)
+    if(ref_rohf_wfn == "NONE"):
+        e_rohf, wfn_rohf = energy('scf', molecule=mol, return_wfn=True, options=opts)
+    else:
+        e_rohf, wfn_rohf = energy('scf', molecule=mol, ref_wfn=ref_rohf_wfn, return_wfn=True, options=opts)
     print("SCF (%i %i): %6.12f" %(mol.molecular_charge(), mol.multiplicity(), e_rohf))
-
-    wfn_rohf.nalphapi().print_out()
-    wfn_rohf.nbetapi().print_out()
 
     # change charge and multiplicity to new target values
     print("DOING SPIN-FLIP: CHARGE %i, MULTIPLICITY %i" % (new_charge, new_multiplicity))
@@ -119,5 +117,14 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={} ):
     print("CAS (%i %i): %6.12f" %(mol.molecular_charge(), mol.multiplicity(), e_cas))
     psi4.core.print_variables()
     psi4.core.clean_options() # more cleanup
-    return e_cas
+    # return required output
+    if((not return_rohf_wfn) and (not return_rohf_e)):
+        return e_cas
+    else:
+        out = (e_cas,)
+        if(return_rohf_wfn):
+            out = out + (wfn_rohf,)
+        if(return_rohf_e):
+            out = out + (e_rohf,)
+        return out
 
