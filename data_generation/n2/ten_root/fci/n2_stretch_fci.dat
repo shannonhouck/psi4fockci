@@ -1,0 +1,48 @@
+
+out = open('fci.out', 'w')
+out.write("FCI CALCULATION: 1 2\n")
+out.write("BL\tFCI ROOTS\n")
+
+start = 4.5
+diff = 0.01
+stop = 0.5
+firstIterDone = False
+# loop over all bond lengths
+bondlength = start
+while(bondlength > stop):
+    # setting up molecule
+    n2 = psi4.geometry("""
+      1 2
+      N
+      N 1 R
+      R = %6.6f
+      symmetry c1
+    """ % (bondlength))
+    # running the spin-flip calculation
+    opts = {'basis': 'cc-pvdz', 'num_roots': 10, 'reference': 'rohf', 'freeze_core': 'TRUE'}
+    # do sf calculation
+    if(firstIterDone):
+        opts.update({'guess': 'read'})
+        set_options(opts)
+        e_fci = energy('fci', molecule=n2, options=opts)
+    else:
+        set_options(opts)
+        e_fci = energy('fci', molecule=n2, options=opts)
+        firstIterDone = True
+    # find all roots
+    root_0 = psi4.get_variable('CI ROOT 0 TOTAL ENERGY')
+    root_1 = psi4.get_variable('CI ROOT 1 TOTAL ENERGY')
+    root_2 = psi4.get_variable('CI ROOT 2 TOTAL ENERGY')
+    root_3 = psi4.get_variable('CI ROOT 3 TOTAL ENERGY')
+    root_4 = psi4.get_variable('CI ROOT 4 TOTAL ENERGY')
+    root_5 = psi4.get_variable('CI ROOT 5 TOTAL ENERGY')
+    root_6 = psi4.get_variable('CI ROOT 6 TOTAL ENERGY')
+    root_7 = psi4.get_variable('CI ROOT 7 TOTAL ENERGY')
+    root_8 = psi4.get_variable('CI ROOT 8 TOTAL ENERGY')
+    root_9 = psi4.get_variable('CI ROOT 9 TOTAL ENERGY')
+    # write to output
+    out.write("%3.3f\t%6.10f\t%6.10f\t%6.10f\t%6.10f\t%6.10f\t%6.10f\t%6.10f\t%6.10f\t%6.10f\t%6.10f\n" %(bondlength, root_0, root_1, root_2, root_3, root_4, root_5, root_6, root_7, root_8, root_9))
+    bondlength = bondlength - diff
+
+out.close()
+
