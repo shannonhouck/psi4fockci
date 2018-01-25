@@ -3,7 +3,7 @@ sys.path.insert(1, '/usr/local/psi4/lib')
 import psi4
 from psi4 import *
 
-def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, ref_rohf_wfn="NONE", return_rohf_wfn=False, return_rohf_e=False ):
+def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, ref_rohf_wfn="NONE", return_ci_wfn=False, return_rohf_wfn=False, return_rohf_e=False ):
     """
     A method to run a spin-flip electron addition calculation.
 
@@ -118,10 +118,12 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
     psi4.core.print_variables()
     psi4.core.clean_options() # more cleanup
     # return required output
-    if((not return_rohf_wfn) and (not return_rohf_e)):
+    if((not return_ci_wfn) and (not return_rohf_wfn) and (not return_rohf_e)):
         return e_cas
     else:
         out = (e_cas,)
+        if(return_ci_wfn):
+            out = out + (wfn_cas,)
         if(return_rohf_wfn):
             out = out + (wfn_rohf,)
         if(return_rohf_e):
