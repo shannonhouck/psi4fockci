@@ -1,0 +1,49 @@
+import sys
+sys.path.insert(0, '../../../')
+
+# importing general packages
+import numpy as np
+import spinflip
+from spinflip import sf_cas
+
+init_c = 0
+init_m = 7
+charge = 1
+multiplicity = 2
+cf = "1x"
+out = open('%i_%i-to-%i_%i_%s.out' % (init_c, init_m, charge, multiplicity, cf), 'w')
+out.write("CAS-SF(%s) CALCULATION: %i %i -> %i %i\n" %(cf, init_c, init_m, charge, multiplicity))
+out.write("BL\tε_HOMO\t\tε_LUMO\t\tROHF\t\tCAS-SF ROOTS\n")
+
+start = 4.5
+diff = 0.01
+stop = 0.5
+firstIterDone = False
+# loop over all bond lengths
+bondlength = start
+while(bondlength > stop):
+    # setting up molecule
+    n2 = psi4.geometry("""
+      %i %i
+      N
+      N 1 R
+      R = %6.6f
+      symmetry c1
+    """ % (init_c, init_m, bondlength))
+    # running the spin-flip calculation
+    opts = {'basis': 'cc-pvdz'}
+    # do sf calculation
+    if(firstIterDone):
+        set_options(opts)
+        opts.update({'guess': 'read'})
+        e_ci, e_scf = sf_cas( charge, multiplicity, n2, conf_space=cf, add_opts=opts, return_rohf_e=True )
+    else:
+        set_options(opts)
+        e_ci, e_scf = sf_cas( charge, multiplicity, n2, conf_space=cf, add_opts=opts, return_rohf_e=True )
+        firstIterDone = True
+    # write to output
+    out.write("%3.3f\t%6.10f\t%6.10f\t%6.10f\t%6.10f\t%6.10f\t%6.10f\t%6.10f\n" %(bondlength, e_scf, e_ci))
+    bondlength = bondlength - diff
+
+out.close()
+
