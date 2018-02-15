@@ -1,12 +1,12 @@
 # psi4_spinflip_wfn
 Code Author: Shannon Houck
 
-Updated: Nov 14, 2017
+Updated: Jan 26, 2018
 
 Currently, the molecule and alpha/beta specifications are set in the input file.
 
-To run an SF-CAS/STO-3G calculation, for example, on the septet state of N2,
- with -2a/+2b, you would edit the input.dat file like so:
+To run an SF-CAS/STO-3G 2-SF 1-IP calculation on N2+, for example,
+ you would edit the example.dat file like so:
 
 ```
 import spinflip
@@ -21,8 +21,8 @@ symmetry c1
 """)
 
 # set target charge and multiplicity
-charge = 0
-multiplicity = 3
+charge = 1
+multiplicity = 2
 
 # set up additional options
 options = {"basis": "sto-3g"}
@@ -31,8 +31,22 @@ options = {"basis": "sto-3g"}
 e = sf_cas( charge, multiplicity, n2, conf_space="" , add_opts=options)
 ```
 
-To run a SF-CAS(1x), you set the conf_space variable; so, one
-would write `sf_cas( charge, multiplicity, n2, conf_space="1x" )` 
-in place of the sf_cas function call above.
+This file can subsequently be run from the command line:
 
-The output from the calculation can be found in output.dat.
+```
+$ psi4 example.dat
+```
+
+To run a SF-CAS(1x) or SF-CAS(S), set the conf_space variable; so, one
+would write `sf_cas( charge, multiplicity, n2, conf_space="1x" )` 
+in place of the sf_cas function call above. Additional things 
+(ex. the CI wavefunction) can be returned using various keywords 
+as outlined in the spinflip.py file comments.
+
+If you have pytest installed, the tests in the tests/ directory can be run with:
+
+```
+$ cd tests/
+$ pytest
+```
+

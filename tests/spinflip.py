@@ -1,1 +1,0 @@
-../spinflip.py

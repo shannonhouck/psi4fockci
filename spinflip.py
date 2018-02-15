@@ -37,13 +37,18 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
     -------
     e_ci : double
         The SF-CAS([conf_space]) energy.
+    return_ci_wfn : psi4.core.Wavefunction
+        (optional) The SF-CAS([conf_space]) wavefunction.
+    return_rohf_e : double
+        (optional) The ROHF energy.
+    return_rohf_wfn : psi4.core.Wavefunction
+        (optional) The ROHF wavefunction.
 
     """
 
     # printing initial information about the calculation
     print("SF-CAS(%s) CALCULATION" % conf_space)
-
-    # set default options
+    # default options for Psi4
     opts = {'scf_type': 'pk',
             'basis': 'cc-pvdz',
             'reference': 'rohf',
@@ -90,7 +95,7 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
     # change charge and multiplicity to new target values
     print("DOING SPIN-FLIP: CHARGE %i, MULTIPLICITY %i" % (new_charge, new_multiplicity))
 
-    # copy molecule so original molecule passed in is unchanged
+    # update molecular charge and multiplicity
     mol.set_molecular_charge(new_charge)
     mol.set_multiplicity(new_multiplicity)
 
@@ -99,7 +104,6 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
     doccpi = wfn_rohf.doccpi()[0]
     soccpi = wfn_rohf.soccpi()[0]
     nmo = wfn_rohf.nmo()
-
     # calculate soccpi and doccpi
     new_soccpi = mol.multiplicity() - 1
     del_electrons = ref_mol.molecular_charge() - mol.molecular_charge()
@@ -109,19 +113,16 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
     wfn_rohf.force_doccpi(psi4.core.Dimension([(int)((n_total - new_soccpi)/2)]))
 
     # set active space and docc space based on configuration space input
+    # Regular CAS configuration space
+    # includes only active space configurations
     if(conf_space == ""):
       opts.update({'frozen_docc': [doccpi]})
       opts.update({'ras1': [0]})
       opts.update({'ras2': [soccpi]})
       opts.update({'ras3': [0]})
       opts.update({'ras4': [0]})
-    elif(conf_space == "S" or conf_space == "xcis"):
-      opts.update({'frozen_docc': [0]})
-      opts.update({'ex_level': 1})
-      opts.update({'ras1': [doccpi]})
-      opts.update({'ras2': [soccpi]})
-      opts.update({'ras3': [nmo - soccpi - doccpi]})
-      opts.update({'ras4': [0]})
+    # 1x configuration space
+    # includes (h, p) excitations
     elif(conf_space == "1x"):
       opts.update({'frozen_docc': [0]})
       opts.update({'ex_level': 0})
@@ -131,15 +132,16 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
       opts.update({'ras2': [soccpi]})
       opts.update({'ras3': [nmo - soccpi - doccpi]})
       opts.update({'ras4': [0]})
-    #elif(conf_space == "2x"):
-    #  opts.update({'frozen_docc': [0]})
-    #  opts.update({'ex_level': 2})
-    #  opts.update({'ex_allow': [0, 1]})
-    #  opts.update({'val_ex_level': 1})
-    #  opts.update({'ras1': [wfn_rohf.doccpi()[0]]})
-    #  opts.update({'ras2': [wfn_rohf.soccpi()[0]]})
-    #  opts.update({'ras3': [wfn_rohf.nmo() - wfn_rohf.soccpi()[0] - wfn_rohf.doccpi()[0]]})
-    #  opts.update({'ras4': [0]})
+    # S configuration space
+    # includes (h, p, hp) excitations
+    elif(conf_space == "S" or conf_space == "xcis"):
+      opts.update({'frozen_docc': [0]})
+      opts.update({'ex_level': 1})
+      opts.update({'ras1': [doccpi]})
+      opts.update({'ras2': [soccpi]})
+      opts.update({'ras3': [nmo - soccpi - doccpi]})
+      opts.update({'ras4': [0]})
+    # Other configuration spaces aren't supported yet
     else:
       print("Configuration space %s not supported. Exiting..." % conf_space)
       exit()
@@ -149,9 +151,10 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
     psi4.set_options(opts)
     e_cas, wfn_cas = energy('detci', ref_wfn=wfn_rohf, return_wfn=True, molecule=mol)
     print("CAS (%i %i): %6.12f" %(mol.molecular_charge(), mol.multiplicity(), e_cas))
-    psi4.core.print_variables()
+    psi4.core.print_variables() # printing Psi4 variables
     psi4.core.clean_options() # more cleanup
-    # return required output
+
+    # return output specified by the user
     if((not return_ci_wfn) and (not return_rohf_wfn) and (not return_rohf_e)):
         return e_cas
     else:
