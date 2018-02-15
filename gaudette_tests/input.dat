@@ -3,6 +3,9 @@ sys.path.insert(1, '/usr/local/psi4/lib')
 import psi4
 sys.path.insert(1, '../')
 
+import spinflip
+from spinflip import sf_cas
+
 mol_002 = psi4.core.Molecule.create_molecule_from_string("""
 2 9
  Fe           1.259590471125    -3.451222689970    -1.726655744681
@@ -305,7 +308,7 @@ mol_003 = psi4.core.Molecule.create_molecule_from_string("""
  symmetry c1
 """)
 
-opts = {'scf_type': 'pk', 'basis': 'STO-3G', 'reference': 'rohf', 'memory': '4 Gb'}
+opts = {'scf_type': 'DIRECT', 'basis': 'STO-3G', 'reference': 'rohf', 'memory': '4 Gb', 'df_scf_guess': False}
 
 psi4.set_options(opts)
 

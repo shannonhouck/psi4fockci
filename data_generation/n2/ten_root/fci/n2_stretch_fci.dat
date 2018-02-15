@@ -19,7 +19,7 @@ while(bondlength > stop):
       symmetry c1
     """ % (bondlength))
     # running the spin-flip calculation
-    opts = {'basis': 'cc-pvdz', 'num_roots': 10, 'reference': 'rohf', 'freeze_core': 'TRUE'}
+    opts = {'basis': '6-31G', 'num_roots': 10, 'reference': 'rohf', 'freeze_core': 'TRUE'}
     # do sf calculation
     if(firstIterDone):
         opts.update({'guess': 'read'})

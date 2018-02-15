@@ -35,7 +35,6 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
             'basis': 'cc-pvdz',
             'reference': 'rohf',
             'guess': 'sad',
-            'diis_start': 20,
             'maxiter': 1000,
             'ci_maxiter': 50,
             'mixed': False}
@@ -72,7 +71,7 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
     n_total = wfn_rohf.nalpha() + wfn_rohf.nbeta() + del_electrons
     # set orbital occupations
     wfn_rohf.force_soccpi(psi4.core.Dimension([new_soccpi]))
-    wfn_rohf.force_doccpi(psi4.core.Dimension([(n_total - new_soccpi)/2]))
+    wfn_rohf.force_doccpi(psi4.core.Dimension([(int)((n_total - new_soccpi)/2)]))
 
     # set active space and docc space based on configuration space input
     if(conf_space == ""):
