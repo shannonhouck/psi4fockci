@@ -3,7 +3,7 @@ sys.path.insert(1, '/usr/local/psi4/lib')
 import psi4
 from psi4 import *
 
-def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, ref_rohf_wfn="NONE", return_ci_wfn=False, return_rohf_wfn=False, return_rohf_e=False ):
+def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, return_ci_wfn=False, return_rohf_wfn=False, return_rohf_e=False, read_rohf_wfn="", write_rohf_wfn="" ):
     """
     A method to run a spin-flip electron addition calculation.
 
@@ -20,6 +20,18 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
         Options "", "S", and "1x" are currently supported.
     add_opts : dict ({})
         Additional options to pass into Psi4.
+    return_ci_wfn : bool (False)
+        Whether to return the CI wavefunction object.
+    return_rohf_wfn : bool (False)
+        Whether to return the ROHF wavefunction object.
+    return_rohf_e : bool (False)
+        Whether to return the ROHF energy.
+    read_rohf_wfn : str ("")
+        Name of file (.npz) to read ROHF wavefunction info from.
+        By default, no wavefunction is read in.
+    write_rohf_wfn : str ("")
+        Name of file (.npz) to write ROHF wavefunction info to.
+        By default, no wavefunction info is written.
 
     Returns
     -------
@@ -30,7 +42,8 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
 
     # printing initial information about the calculation
     print("SF-CAS(%s) CALCULATION" % conf_space)
-    # update options to include any additional opts from the user
+
+    # set default options
     opts = {'scf_type': 'pk',
             'basis': 'cc-pvdz',
             'reference': 'rohf',
@@ -40,17 +53,39 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
             'mixed': False}
     opts.update(add_opts) # add additional options from user
 
-    # run rohf calculation on reference state
-    print("RUNNING REFERENCE...\tCHARGE %i\tMULT %i" %(ref_mol.molecular_charge(), ref_mol.multiplicity()))
-    psi4.core.clean() # cleanup (in case Psi4 has been run before)
-    # storing MOs (in case we need to restart the job)
+    # run ROHF calculation on reference state or read it in
+    psi4.core.clean() # cleanup in case Psi4 has been run before
     psi4.set_options(opts)
     mol = ref_mol.clone() # clone molecule so original isn't modified
-    if(ref_rohf_wfn == "NONE"):
+    # read in ROHF wavefunction if provided
+    if(read_rohf_wfn != ""):
+        print("READING REFERENCE...\tCHARGE %i\tMULT %i" %(ref_mol.molecular_charge(), ref_mol.multiplicity()))
+        # setting up and initializing Wavefunction object
+        opts.update({'maxiter': 1, 'fail_on_maxiter': False})
         e_rohf, wfn_rohf = energy('scf', molecule=mol, return_wfn=True, options=opts)
+        opts.update({'maxiter': 1000, 'fail_on_maxiter': True})
+        # overwriting data...
+        saved_np = np.load(read_rohf_wfn, 'rb')
+        wfn_rohf.force_soccpi(psi4.core.Dimension(saved_np['arr_0'].tolist()))
+        wfn_rohf.force_doccpi(psi4.core.Dimension(saved_np['arr_1'].tolist()))
+        wfn_rohf.Ca().copy(psi4.core.Matrix.from_array(saved_np['arr_2']))
+        wfn_rohf.Cb().copy(psi4.core.Matrix.from_array(saved_np['arr_3']))
+        wfn_rohf.H().copy(psi4.core.Matrix.from_array(saved_np['arr_4']))
+    # else, run ROHF on reference state
     else:
-        e_rohf, wfn_rohf = energy('scf', molecule=mol, ref_wfn=ref_rohf_wfn, return_wfn=True, options=opts)
-    print("SCF (%i %i): %6.12f" %(mol.molecular_charge(), mol.multiplicity(), e_rohf))
+        print("RUNNING REFERENCE...\tCHARGE %i\tMULT %i" %(ref_mol.molecular_charge(), ref_mol.multiplicity()))
+        e_rohf, wfn_rohf = energy('scf', molecule=mol, return_wfn=True, options=opts)
+        print("SCF (%i %i): %6.12f" %(mol.molecular_charge(), mol.multiplicity(), e_rohf))
+
+    # save ROHF wavefunction values in Numpy file for future reference if requested
+    if(write_rohf_wfn != ""):
+        soccpi_np = psi4.core.Dimension.to_tuple(wfn_rohf.soccpi())
+        doccpi_np = psi4.core.Dimension.to_tuple(wfn_rohf.doccpi())
+        Ca_np = psi4.core.Matrix.to_array(wfn_rohf.Ca(), copy=True)
+        Cb_np = psi4.core.Matrix.to_array(wfn_rohf.Cb(), copy=True)
+        H_np = psi4.core.Matrix.to_array(wfn_rohf.H(), copy=True)
+        outfile = open(write_rohf_wfn, 'wb')
+        np.savez(outfile, soccpi_np, doccpi_np, Ca_np, Cb_np, H_np)
 
     # change charge and multiplicity to new target values
     print("DOING SPIN-FLIP: CHARGE %i, MULTIPLICITY %i" % (new_charge, new_multiplicity))
