@@ -66,13 +66,8 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
     if(read_rohf_wfn != ""):
         print("READING REFERENCE...\tCHARGE %i\tMULT %i" %(ref_mol.molecular_charge(), ref_mol.multiplicity()))
         # setting up and initializing Wavefunction object
-        opts.update({'maxiter': 0, 'fail_on_maxiter': False})
-        psi4.set_options(opts)
-        wfn_rohf = psi4.core.ROHF.build(mol, psi4.core.get_global_option('BASIS'))
-        print("hooray")
-        #e_rohf, wfn_rohf = energy('scf', molecule=mol, return_wfn=True, options=opts)
-        opts.update({'maxiter': 1000, 'fail_on_maxiter': True})
-        psi4.set_options(opts)
+        base_wfn_rohf = psi4.core.ROHF.build(mol, psi4.core.get_global_option('BASIS'))
+        wfn_rohf = scf_wavefunction_factory('scf', base_wfn_rohf, 'ROHF')
         # overwriting data...
         saved_np = np.load(read_rohf_wfn, 'rb')
         wfn_rohf.force_soccpi(psi4.core.Dimension(saved_np['arr_0'].tolist()))
