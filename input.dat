@@ -20,7 +20,7 @@ multiplicity = 3
 
 # running the spin-flip calculation
 opts = {'basis': 'sto-3g'}
-#e, rohf_wfn = sf_cas( charge, multiplicity, n2, conf_space="", add_opts=opts, return_rohf_wfn=True, write_rohf_wfn="dat.npz" )
-e, rohf_wfn = sf_cas( charge, multiplicity, n2, conf_space="", add_opts=opts, return_rohf_wfn=True, read_rohf_wfn="dat.npz" )
+e, rohf_wfn = sf_cas( charge, multiplicity, n2, conf_space="1x", add_opts=opts, return_rohf_wfn=True, write_rohf_wfn="dat.npz" )
+e, rohf_wfn = sf_cas( charge, multiplicity, n2, conf_space="1x", add_opts=opts, return_rohf_wfn=True, read_rohf_wfn="dat.npz" )
 
 
