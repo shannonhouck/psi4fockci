@@ -1,4 +1,7 @@
+import os
+import glob
 import spinflip
+import numpy as np
 from spinflip import sf_cas
 
 # setting up molecule
@@ -19,8 +22,9 @@ charge = 0
 multiplicity = 3
 
 # running the spin-flip calculation
-opts = {'basis': 'sto-3g'}
-e, rohf_wfn = sf_cas( charge, multiplicity, n2, conf_space="1x", add_opts=opts, return_rohf_wfn=True, write_rohf_wfn="dat.npz" )
-e, rohf_wfn = sf_cas( charge, multiplicity, n2, conf_space="1x", add_opts=opts, return_rohf_wfn=True, read_rohf_wfn="dat.npz" )
+opts = {'basis': 'cc-pvdz', 'diis_start': 4, 'e_convergence': 1e-10, 'num_roots': 4}
+e, scf_wfn = sf_cas( charge, multiplicity, n2, conf_space="1x", add_opts=opts, return_rohf_wfn=True, write_rohf_wfn='chk.180.npz')
+
+e, rohf_wfn = sf_cas( charge, multiplicity, n2, conf_space="1x", add_opts=opts, return_rohf_wfn=True, read_rohf_wfn='chk.180.npz' )
 
 
