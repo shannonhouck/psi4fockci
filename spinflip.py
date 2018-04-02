@@ -4,8 +4,50 @@ import shutil
 sys.path.insert(1, '/usr/local/psi4/lib')
 import psi4
 from psi4 import *
+import numpy as np
+import numpy.linalg as LIN
 
-def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, return_ci_wfn=False, return_rohf_wfn=False, return_rohf_e=False, read_rohf_wfn="", write_rohf_wfn=""):
+# Used to compute various matrices...
+# Includes S^(1/2) and S^(-1/2).
+import numpy as np
+from numpy import linalg as LIN
+
+# Computes the orthogonalized square root of a given matrix.
+# Params:
+#  numpy A - Matrix to be square-rooted
+#  int threshold_S - Threshold for S values
+# Returns:
+#  numpy matrix A^(1/2)
+def matrix_sqrt( A, threshold_S ):
+  # do an SVD of matrix A
+  A_vals, A_vects = LIN.eig(A)
+  # set up output matrix and populate with A_s values
+  A_sqrt = np.zeros((len(A_vals), len(A_vals)))
+  for i in range(0, len(A_vals)):
+    if(A_vals[i] > threshold_S):
+      A_sqrt[i,i] = np.sqrt(A_vals[i])
+  # form the final output matrix and return
+  return np.dot(A_vects, np.dot(A_sqrt, LIN.inv(A_vects)))
+
+# Computes the orthogonalized square root inverse of a given matrix.
+# Params:
+#  numpy A - Matrix to be square-inverted
+#  int threshold_S - Threshold for S values
+# Returns:
+#  numpy matrix A^(-1/2)
+def matrix_inv_sqrt( A, threshold_S ):
+  # do an SVD of matrix A
+  A_vals, A_vects = LIN.eig(A)
+  # set up output matrix and populate with A_s values
+  A_sqrt = np.zeros((len(A_vals), len(A_vals)))
+  for i in range(0, len(A_vals)):
+    if(A_vals[i] > threshold_S):
+      A_sqrt[i,i] = 1/np.sqrt(A_vals[i])
+  # form the final output matrix and return
+  return np.dot(A_vects, np.dot(A_sqrt, LIN.inv(A_vects)))
+
+
+def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, return_ci_wfn=False, return_rohf_wfn=False, return_rohf_e=False, read_rohf_wfn="", write_rohf_wfn="", rotate_orbitals=False):
     """
     A method to run a spin-flip electron addition calculation.
 
@@ -131,6 +173,34 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
     else:
       print("Configuration space %s not supported. Exiting..." % conf_space)
       exit()
+
+    # rotate orbitals for convergence
+    # note that this ONLY works for ROHF orbitals right now!!
+    # modify for UHF if needed later on
+    # also probably need to add 1x and S cases (to include RAS1/3??)
+    if(rotate_orbitals):
+        # get S for orthogonalization
+        S = psi4.core.Matrix.to_array(wfn_rohf.S(), copy=True)
+        S_inv_sqrt = matrix_inv_sqrt(S, 1e-12)
+        S_sqrt = matrix_sqrt(S, 1e-12)
+        # get orthogonzlied Fock matrix
+        Fa_np = psi4.core.Matrix.to_array(wfn_rohf.Fa(), copy=True)
+        Fa_np = np.dot(S_inv_sqrt.T, np.dot(Fa_np, S_inv_sqrt))
+        # get RAS 2 from orthogonalized orbitals
+        orbs_uncanon = psi4.core.Matrix.to_array(wfn_rohf.Ca(), copy=True)
+        orbs_full = np.dot(S_sqrt, orbs_uncanon)
+        orbs = orbs_full[:, doccpi:doccpi+soccpi]
+        # now, canonicalize orbitals (rotate RAS2 space)
+        Fa_np = np.dot(orbs.T, np.dot(Fa_np, orbs))
+        diag_f, vect_f = LIN.eigh(Fa_np)
+        Ca_rotated = np.dot(orbs, vect_f)
+        Cb_rotated = np.dot(orbs, vect_f)
+        # concatenate
+        Ca_full = np.column_stack((orbs_full[:, :doccpi], Ca_rotated, orbs_full[:, soccpi+doccpi:]))
+        Cb_full = np.column_stack((orbs_full[:, :doccpi], Cb_rotated, orbs_full[:, soccpi+doccpi:]))
+        # put back into unorthogonal form and set
+        wfn_rohf.Ca().copy(psi4.core.Matrix.from_array(np.dot(S_inv_sqrt, Ca_full), name="Ca (Alpha)"))
+        wfn_rohf.Cb().copy(psi4.core.Matrix.from_array(np.dot(S_inv_sqrt, Cb_full), name="Cb (Beta)"))
 
     # run cas
     print("RUNNING CAS...\t\tCHARGE %i\tMULT %i" %(mol.molecular_charge(), mol.multiplicity()))
