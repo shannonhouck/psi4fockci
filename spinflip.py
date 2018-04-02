@@ -179,28 +179,60 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
     # modify for UHF if needed later on
     # also probably need to add 1x and S cases (to include RAS1/3??)
     if(rotate_orbitals):
-        # get S for orthogonalization
-        S = psi4.core.Matrix.to_array(wfn_rohf.S(), copy=True)
-        S_inv_sqrt = matrix_inv_sqrt(S, 1e-12)
-        S_sqrt = matrix_sqrt(S, 1e-12)
-        # get orthogonzlied Fock matrix
-        Fa_np = psi4.core.Matrix.to_array(wfn_rohf.Fa(), copy=True)
-        Fa_np = np.dot(S_inv_sqrt.T, np.dot(Fa_np, S_inv_sqrt))
-        # get RAS 2 from orthogonalized orbitals
-        orbs_uncanon = psi4.core.Matrix.to_array(wfn_rohf.Ca(), copy=True)
-        orbs_full = np.dot(S_sqrt, orbs_uncanon)
-        orbs = orbs_full[:, doccpi:doccpi+soccpi]
-        # now, canonicalize orbitals (rotate RAS2 space)
-        Fa_np = np.dot(orbs.T, np.dot(Fa_np, orbs))
-        diag_f, vect_f = LIN.eigh(Fa_np)
-        Ca_rotated = np.dot(orbs, vect_f)
-        Cb_rotated = np.dot(orbs, vect_f)
-        # concatenate
-        Ca_full = np.column_stack((orbs_full[:, :doccpi], Ca_rotated, orbs_full[:, soccpi+doccpi:]))
-        Cb_full = np.column_stack((orbs_full[:, :doccpi], Cb_rotated, orbs_full[:, soccpi+doccpi:]))
-        # put back into unorthogonal form and set
-        wfn_rohf.Ca().copy(psi4.core.Matrix.from_array(np.dot(S_inv_sqrt, Ca_full), name="Ca (Alpha)"))
-        wfn_rohf.Cb().copy(psi4.core.Matrix.from_array(np.dot(S_inv_sqrt, Cb_full), name="Cb (Beta)"))
+        if(conf_space == ""):
+            # get S for orthogonalization
+            S = psi4.core.Matrix.to_array(wfn_rohf.S(), copy=True)
+            S_inv_sqrt = matrix_inv_sqrt(S, 1e-12)
+            S_sqrt = matrix_sqrt(S, 1e-12)
+            # get orthogonzlied Fock matrix
+            Fa_np = psi4.core.Matrix.to_array(wfn_rohf.Fa(), copy=True)
+            Fa_np = np.dot(S_inv_sqrt.T, np.dot(Fa_np, S_inv_sqrt))
+            # get RAS 2 from orthogonalized orbitals
+            orbs_uncanon = psi4.core.Matrix.to_array(wfn_rohf.Ca(), copy=True)
+            orbs_full = np.dot(S_sqrt, orbs_uncanon)
+            orbs = orbs_full[:, doccpi:doccpi+soccpi]
+            # now, canonicalize orbitals (rotate RAS2 space)
+            Fa_np = np.dot(orbs.T, np.dot(Fa_np, orbs))
+            diag_f, vect_f = LIN.eigh(Fa_np)
+            Ca_rotated = np.dot(orbs, vect_f)
+            Cb_rotated = np.dot(orbs, vect_f)
+            # concatenate
+            Ca_full = np.column_stack((orbs_full[:, :doccpi], Ca_rotated, orbs_full[:, soccpi+doccpi:]))
+            Cb_full = np.column_stack((orbs_full[:, :doccpi], Cb_rotated, orbs_full[:, soccpi+doccpi:]))
+            # put back into unorthogonal form and set
+            wfn_rohf.Ca().copy(psi4.core.Matrix.from_array(np.dot(S_inv_sqrt, Ca_full), name="Ca (Alpha)"))
+            wfn_rohf.Cb().copy(psi4.core.Matrix.from_array(np.dot(S_inv_sqrt, Cb_full), name="Cb (Beta)"))
+        else:
+            # get S for orthogonalization
+            S = psi4.core.Matrix.to_array(wfn_rohf.S(), copy=True)
+            S_inv_sqrt = matrix_inv_sqrt(S, 1e-12)
+            S_sqrt = matrix_sqrt(S, 1e-12)
+            # get orthogonzlied Fock matrix
+            Fa_np = psi4.core.Matrix.to_array(wfn_rohf.Fa(), copy=True)
+            Fa_np = np.dot(S_inv_sqrt.T, np.dot(Fa_np, S_inv_sqrt))
+            # get RAS 2 from orthogonalized orbitals
+            orbs_uncanon = psi4.core.Matrix.to_array(wfn_rohf.Ca(), copy=True)
+            orbs_full = np.dot(S_sqrt, orbs_uncanon)
+            ras1 = orbs_full[:, :doccpi]
+            ras2 = orbs_full[:, doccpi:doccpi+soccpi]
+            ras3 = orbs_full[:, doccpi+soccpi:]
+            # now, canonicalize orbitals (rotate RAS2 space)
+            Fa_1 = np.dot(ras1.T, np.dot(Fa_np, ras1))
+            Fa_2 = np.dot(ras2.T, np.dot(Fa_np, ras2))
+            Fa_3 = np.dot(ras3.T, np.dot(Fa_np, ras3))
+            diag_f1, vect_f1 = LIN.eigh(Fa_1)
+            diag_f2, vect_f2 = LIN.eigh(Fa_2)
+            diag_f3, vect_f3 = LIN.eigh(Fa_3)
+            Ca_ras1 = np.dot(ras1, vect_f1)
+            Ca_ras2 = np.dot(ras2, vect_f2)
+            Ca_ras3 = np.dot(ras3, vect_f3)
+            # concatenate
+            Ca_full = np.column_stack((Ca_ras1, Ca_ras2, Ca_ras3))
+            Cb_full = np.column_stack((Ca_ras1, Ca_ras2, Ca_ras3))
+            # put back into unorthogonal form and set
+            wfn_rohf.Ca().copy(psi4.core.Matrix.from_array(np.dot(S_inv_sqrt, Ca_full), name="Ca (Alpha)"))
+            wfn_rohf.Cb().copy(psi4.core.Matrix.from_array(np.dot(S_inv_sqrt, Cb_full), name="Cb (Beta)"))
+        
 
     # run cas
     print("RUNNING CAS...\t\tCHARGE %i\tMULT %i" %(mol.molecular_charge(), mol.multiplicity()))
