@@ -12,42 +12,7 @@ import numpy.linalg as LIN
 import numpy as np
 from numpy import linalg as LIN
 
-# Computes the orthogonalized square root of a given matrix.
-# Params:
-#  numpy A - Matrix to be square-rooted
-#  int threshold_S - Threshold for S values
-# Returns:
-#  numpy matrix A^(1/2)
-def matrix_sqrt( A, threshold_S ):
-  # do an SVD of matrix A
-  A_vals, A_vects = LIN.eig(A)
-  # set up output matrix and populate with A_s values
-  A_sqrt = np.zeros((len(A_vals), len(A_vals)))
-  for i in range(0, len(A_vals)):
-    if(A_vals[i] > threshold_S):
-      A_sqrt[i,i] = np.sqrt(A_vals[i])
-  # form the final output matrix and return
-  return np.dot(A_vects, np.dot(A_sqrt, LIN.inv(A_vects)))
-
-# Computes the orthogonalized square root inverse of a given matrix.
-# Params:
-#  numpy A - Matrix to be square-inverted
-#  int threshold_S - Threshold for S values
-# Returns:
-#  numpy matrix A^(-1/2)
-def matrix_inv_sqrt( A, threshold_S ):
-  # do an SVD of matrix A
-  A_vals, A_vects = LIN.eig(A)
-  # set up output matrix and populate with A_s values
-  A_sqrt = np.zeros((len(A_vals), len(A_vals)))
-  for i in range(0, len(A_vals)):
-    if(A_vals[i] > threshold_S):
-      A_sqrt[i,i] = 1/np.sqrt(A_vals[i])
-  # form the final output matrix and return
-  return np.dot(A_vects, np.dot(A_sqrt, LIN.inv(A_vects)))
-
-
-def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, return_ci_wfn=False, return_rohf_wfn=False, return_rohf_e=False, read_rohf_wfn="", write_rohf_wfn="", rotate_orbitals=False, localize=False):
+def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, return_ci_wfn=False, return_rohf_wfn=False, return_rohf_e=False, read_rohf_wfn="", write_rohf_wfn="", localize=False):
     """
     A method to run a spin-flip electron addition calculation.
 
@@ -73,6 +38,13 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
     read_rohf_wfn : str ("")
         Name of file (.npz) to read ROHF wavefunction info from.
         By default, no wavefunction is read in.
+    write_rohf_wfn : str ("")
+        Name of file (.npz) to read ROHF wavefunction info from.
+        By default, no wavefunction is written.
+        Note that you MUST run Psi4 with the -m (messy) flag for this to work!
+    localize : bool (False)
+        Whether to perform BOYS localization on the RAS 2 space before computing.
+        Can help with visualization and analysis of orbitals.
 
     Returns
     -------
@@ -122,8 +94,6 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
     # saving npz file of wavefunction
     if(write_rohf_wfn != ""):
         shutil.copy(glob.glob('./*.180.npz')[0], write_rohf_wfn)
-
-    psi4.oeprop(wfn_rohf, "MULLIKEN_CHARGES")
 
     # update molecular charge and multiplicity
     mol.set_molecular_charge(new_charge)
