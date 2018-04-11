@@ -47,7 +47,7 @@ def matrix_inv_sqrt( A, threshold_S ):
   return np.dot(A_vects, np.dot(A_sqrt, LIN.inv(A_vects)))
 
 
-def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, return_ci_wfn=False, return_rohf_wfn=False, return_rohf_e=False, read_rohf_wfn="", write_rohf_wfn="", rotate_orbitals=False):
+def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, return_ci_wfn=False, return_rohf_wfn=False, return_rohf_e=False, read_rohf_wfn="", write_rohf_wfn="", rotate_orbitals=False, localize=False):
     """
     A method to run a spin-flip electron addition calculation.
 
@@ -123,6 +123,8 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
     if(write_rohf_wfn != ""):
         shutil.copy(glob.glob('./*.180.npz')[0], write_rohf_wfn)
 
+    psi4.oeprop(wfn_rohf, "MULLIKEN_CHARGES")
+
     # update molecular charge and multiplicity
     mol.set_molecular_charge(new_charge)
     mol.set_multiplicity(new_multiplicity)
@@ -139,6 +141,21 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
     # set orbital occupations
     wfn_rohf.force_soccpi(psi4.core.Dimension([new_soccpi]))
     wfn_rohf.force_doccpi(psi4.core.Dimension([(int)((n_total - new_soccpi)/2)]))
+
+    # if we need to localize...
+    if(localize):
+        C = psi4.core.Matrix.to_array(wfn_rohf.Ca(), copy=True)
+        ras1_C = C[:, :doccpi]
+        ras2_C = C[:, doccpi:doccpi+soccpi]
+        ras3_C = C[:, doccpi+soccpi:]
+        loc = psi4.core.Localizer.build('BOYS', wfn_rohf.basisset(), psi4.core.Matrix.from_array(ras2_C))
+        loc.localize()
+        ras2_localized = psi4.core.Matrix.to_array(loc.L, copy=True)
+        localized_orbs = np.column_stack((ras1_C, ras2_localized, ras3_C))
+        new_Ca = psi4.core.Matrix.from_array(localized_orbs, name="Ca")
+        new_Cb = psi4.core.Matrix.from_array(localized_orbs, name="Cb")
+        wfn_rohf.Ca().copy(new_Ca)
+        wfn_rohf.Cb().copy(new_Cb)
 
     # set active space and docc space based on configuration space input
     # Regular CAS configuration space
@@ -169,70 +186,24 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
       opts.update({'ras2': [soccpi]})
       opts.update({'ras3': [nmo - soccpi - doccpi]})
       opts.update({'ras4': [0]})
+    elif(conf_space == "SD"):
+      opts.update({'frozen_docc': [0]})
+      opts.update({'ex_level': 2})
+      opts.update({'ras1': [doccpi]})
+      opts.update({'ras2': [soccpi]})
+      opts.update({'ras3': [nmo - soccpi - doccpi]})
+      opts.update({'ras4': [0]})
+    elif(conf_space == "SDT"):
+      opts.update({'frozen_docc': [0]})
+      opts.update({'ex_level': 3})
+      opts.update({'ras1': [doccpi]})
+      opts.update({'ras2': [soccpi]})
+      opts.update({'ras3': [nmo - soccpi - doccpi]})
+      opts.update({'ras4': [0]})
     # Other configuration spaces aren't supported yet
     else:
       print("Configuration space %s not supported. Exiting..." % conf_space)
       exit()
-
-    # rotate orbitals for convergence
-    # note that this ONLY works for ROHF orbitals right now!!
-    # modify for UHF if needed later on
-    # also probably need to add 1x and S cases (to include RAS1/3??)
-    if(rotate_orbitals):
-        if(conf_space == ""):
-            # get S for orthogonalization
-            S = psi4.core.Matrix.to_array(wfn_rohf.S(), copy=True)
-            S_inv_sqrt = matrix_inv_sqrt(S, 1e-12)
-            S_sqrt = matrix_sqrt(S, 1e-12)
-            # get orthogonzlied Fock matrix
-            Fa_np = psi4.core.Matrix.to_array(wfn_rohf.Fa(), copy=True)
-            Fa_np = np.dot(S_inv_sqrt.T, np.dot(Fa_np, S_inv_sqrt))
-            # get RAS 2 from orthogonalized orbitals
-            orbs_uncanon = psi4.core.Matrix.to_array(wfn_rohf.Ca(), copy=True)
-            orbs_full = np.dot(S_sqrt, orbs_uncanon)
-            orbs = orbs_full[:, doccpi:doccpi+soccpi]
-            # now, canonicalize orbitals (rotate RAS2 space)
-            Fa_np = np.dot(orbs.T, np.dot(Fa_np, orbs))
-            diag_f, vect_f = LIN.eigh(Fa_np)
-            Ca_rotated = np.dot(orbs, vect_f)
-            Cb_rotated = np.dot(orbs, vect_f)
-            # concatenate
-            Ca_full = np.column_stack((orbs_full[:, :doccpi], Ca_rotated, orbs_full[:, soccpi+doccpi:]))
-            Cb_full = np.column_stack((orbs_full[:, :doccpi], Cb_rotated, orbs_full[:, soccpi+doccpi:]))
-            # put back into unorthogonal form and set
-            wfn_rohf.Ca().copy(psi4.core.Matrix.from_array(np.dot(S_inv_sqrt, Ca_full), name="Ca (Alpha)"))
-            wfn_rohf.Cb().copy(psi4.core.Matrix.from_array(np.dot(S_inv_sqrt, Cb_full), name="Cb (Beta)"))
-        else:
-            # get S for orthogonalization
-            S = psi4.core.Matrix.to_array(wfn_rohf.S(), copy=True)
-            S_inv_sqrt = matrix_inv_sqrt(S, 1e-12)
-            S_sqrt = matrix_sqrt(S, 1e-12)
-            # get orthogonzlied Fock matrix
-            Fa_np = psi4.core.Matrix.to_array(wfn_rohf.Fa(), copy=True)
-            Fa_np = np.dot(S_inv_sqrt.T, np.dot(Fa_np, S_inv_sqrt))
-            # get RAS 2 from orthogonalized orbitals
-            orbs_uncanon = psi4.core.Matrix.to_array(wfn_rohf.Ca(), copy=True)
-            orbs_full = np.dot(S_sqrt, orbs_uncanon)
-            ras1 = orbs_full[:, :doccpi]
-            ras2 = orbs_full[:, doccpi:doccpi+soccpi]
-            ras3 = orbs_full[:, doccpi+soccpi:]
-            # now, canonicalize orbitals (rotate RAS2 space)
-            Fa_1 = np.dot(ras1.T, np.dot(Fa_np, ras1))
-            Fa_2 = np.dot(ras2.T, np.dot(Fa_np, ras2))
-            Fa_3 = np.dot(ras3.T, np.dot(Fa_np, ras3))
-            diag_f1, vect_f1 = LIN.eigh(Fa_1)
-            diag_f2, vect_f2 = LIN.eigh(Fa_2)
-            diag_f3, vect_f3 = LIN.eigh(Fa_3)
-            Ca_ras1 = np.dot(ras1, vect_f1)
-            Ca_ras2 = np.dot(ras2, vect_f2)
-            Ca_ras3 = np.dot(ras3, vect_f3)
-            # concatenate
-            Ca_full = np.column_stack((Ca_ras1, Ca_ras2, Ca_ras3))
-            Cb_full = np.column_stack((Ca_ras1, Ca_ras2, Ca_ras3))
-            # put back into unorthogonal form and set
-            wfn_rohf.Ca().copy(psi4.core.Matrix.from_array(np.dot(S_inv_sqrt, Ca_full), name="Ca (Alpha)"))
-            wfn_rohf.Cb().copy(psi4.core.Matrix.from_array(np.dot(S_inv_sqrt, Cb_full), name="Cb (Beta)"))
-        
 
     # run cas
     print("RUNNING CAS...\t\tCHARGE %i\tMULT %i" %(mol.molecular_charge(), mol.multiplicity()))
