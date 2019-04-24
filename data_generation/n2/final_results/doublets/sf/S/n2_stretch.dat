@@ -10,10 +10,10 @@ init_c = 1
 init_m = 6
 charge = 1
 multiplicity = 2
-cf = "1x"
-out = open('2SF-1EA-D.out', 'w')
+cf = "S"
+out = open('2SF-D.out', 'w')
 out.write("CAS-SF(%s) CALCULATION: %i %i -> %i %i\n" %(cf, init_c, init_m, charge, multiplicity))
-out.write("BL\tε_HOMO\t\tε_LUMO\t\tROHF\t\tCAS-SF ROOTS\n")
+out.write("BL\tHOMO\t\tLUMO\t\tROHF\t\tCAS-SF ROOTS\n")
 
 start = 4.5
 diff = 0.01
@@ -31,11 +31,9 @@ while(bondlength > stop):
       symmetry c1
     """ % (init_c, init_m, bondlength))
     # add small potential (negligible)
-    psi4.set_module_options('scf', {'perturb_h': True})
-    psi4.set_module_options('scf', {'perturb_dipole': [0.00001, 0.00001, 0.0]})
     
     # running the spin-flip calculation
-    opts = {'basis': 'cc-pvdz', 'num_roots': 6, 's': 0.5, 'calc_s_squared': True, 'soscf': True, 'diis_start': 20, 'max_num_vecs': 100, 'ci_maxiter': 100}
+    opts = {'basis': 'cc-pvdz', 'num_roots': 6, 's': 0.5, 'calc_s_squared': True, 'soscf': True, 'diis_start': 20, 'ci_maxiter': 100}
     # do sf calculation
     if(firstIterDone):
         set_options(opts)

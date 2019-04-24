@@ -12,7 +12,7 @@ import numpy.linalg as LIN
 import numpy as np
 from numpy import linalg as LIN
 
-def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, return_ci_wfn=False, return_rohf_wfn=False, return_rohf_e=False, read_rohf_wfn="", write_rohf_wfn="", localize=False):
+def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, return_ci_wfn=False, return_rohf_wfn=False, return_rohf_e=False, read_rohf_wfn="", write_rohf_wfn="", localize=False, frozen_docc=0, frozen_uocc=0):
     """
     A method to run a spin-flip electron addition calculation.
 
@@ -136,6 +136,27 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
       opts.update({'ras2': [soccpi]})
       opts.update({'ras3': [0]})
       opts.update({'ras4': [0]})
+    # just (h) excitations
+    elif(conf_space == "h"):
+      opts.update({'ex_level': 0})
+      opts.update({'val_ex_level': 1})
+      opts.update({'ras3_max': 0})
+      opts.update({'frozen_docc': [frozen_docc]})
+      opts.update({'ras1': [doccpi - frozen_docc]})
+      opts.update({'ras2': [soccpi]})
+      opts.update({'ras3': [0]})
+      opts.update({'ras4': [0]})
+    # just (p) excitations
+    elif(conf_space == "p"):
+      opts.update({'ex_level': 0})
+      opts.update({'val_ex_level': 0})
+      opts.update({'ras3_max': 1})
+      opts.update({'frozen_docc': [doccpi]})
+      opts.update({'ras1': [0]})
+      opts.update({'ras2': [soccpi]})
+      opts.update({'ras3': [nmo - soccpi - doccpi - frozen_uocc]})
+      opts.update({'frozen_uocc': [frozen_uocc]})
+      opts.update({'ras4': [0]})
     # 1x configuration space
     # includes (h, p) excitations
     elif(conf_space == "1x"):
@@ -143,32 +164,40 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
       opts.update({'ex_level': 0})
       opts.update({'val_ex_level': 1})
       opts.update({'ras3_max': 1})
-      opts.update({'ras1': [doccpi]})
+      opts.update({'frozen_docc': [frozen_docc]})
+      opts.update({'ras1': [doccpi - frozen_docc]})
       opts.update({'ras2': [soccpi]})
-      opts.update({'ras3': [nmo - soccpi - doccpi]})
+      opts.update({'ras3': [nmo - soccpi - doccpi - frozen_uocc]})
+      opts.update({'frozen_uocc': [frozen_uocc]})
       opts.update({'ras4': [0]})
     # S configuration space
     # includes (h, p, hp) excitations
     elif(conf_space == "S" or conf_space == "xcis"):
       opts.update({'frozen_docc': [0]})
       opts.update({'ex_level': 1})
-      opts.update({'ras1': [doccpi]})
+      opts.update({'frozen_docc': [frozen_docc]})
+      opts.update({'ras1': [doccpi - frozen_docc]})
       opts.update({'ras2': [soccpi]})
-      opts.update({'ras3': [nmo - soccpi - doccpi]})
+      opts.update({'ras3': [nmo - soccpi - doccpi - frozen_uocc]})
+      opts.update({'frozen_uocc': [frozen_uocc]})
       opts.update({'ras4': [0]})
     elif(conf_space == "SD"):
       opts.update({'frozen_docc': [0]})
       opts.update({'ex_level': 2})
-      opts.update({'ras1': [doccpi]})
+      opts.update({'frozen_docc': [frozen_docc]})
+      opts.update({'ras1': [doccpi - frozen_docc]})
       opts.update({'ras2': [soccpi]})
-      opts.update({'ras3': [nmo - soccpi - doccpi]})
+      opts.update({'ras3': [nmo - soccpi - doccpi - frozen_uocc]})
+      opts.update({'frozen_uocc': [frozen_uocc]})
       opts.update({'ras4': [0]})
     elif(conf_space == "SDT"):
       opts.update({'frozen_docc': [0]})
       opts.update({'ex_level': 3})
-      opts.update({'ras1': [doccpi]})
+      opts.update({'frozen_docc': [frozen_docc]})
+      opts.update({'ras1': [doccpi - frozen_docc]})
       opts.update({'ras2': [soccpi]})
-      opts.update({'ras3': [nmo - soccpi - doccpi]})
+      opts.update({'ras3': [nmo - soccpi - doccpi - frozen_uocc]})
+      opts.update({'frozen_uocc': [frozen_uocc]})
       opts.update({'ras4': [0]})
     # Other configuration spaces aren't supported yet
     else:

@@ -17,7 +17,7 @@ symmetry c1
 # Test: SF-xCIS/CC-PVDZ with O2 (0,3 to 0,1)
 def test_1():
   options = {"basis": "cc-pvdz"}
-  e = sf_cas( 0, 1, o2, conf_space="xcis", add_opts=options )
+  e = sf_cas( 0, 1, o2, conf_space="xcis", add_opts=options, localize=True )
   expected = -149.604321051649
   assert (e - expected) < threshold
 
