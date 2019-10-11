@@ -12,7 +12,9 @@ import numpy.linalg as LIN
 import numpy as np
 from numpy import linalg as LIN
 
-def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, return_ci_wfn=False, return_rohf_wfn=False, return_rohf_e=False, read_rohf_wfn="", write_rohf_wfn="", localize=False, frozen_docc=0, frozen_uocc=0):
+def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, return_ci_wfn=False, 
+            return_rohf_wfn=False, return_rohf_e=False, read_rohf_wfn="", write_rohf_wfn="", 
+            write_ci_vects=True, localize=False, frozen_docc=0, frozen_uocc=0):
     """
     A method to run a spin-flip electron addition calculation.
 
@@ -211,6 +213,21 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
     print("CAS (%i %i): %6.12f" %(mol.molecular_charge(), mol.multiplicity(), e_cas))
     psi4.core.print_variables() # printing Psi4 variables
     psi4.core.clean_options() # more cleanup
+
+    # obtain eigenvectors if needed
+    # partly based on Daniel Smith's answer on Psi4 forums
+    if(write_ci_vects):
+        wfn_cas_2 = psi4.core.CIWavefunction(wfn_rohf)
+        n_roots = add_opts['NUM_ROOTS']
+        C = np.zeros((wfn_cas_2.ndet(), n_roots))
+        print(C.shape)
+        for i in range(n_roots):
+            dvec = wfn_cas_2.new_civector(i+1, 53, True, True)
+            dvec.set_nvec(i+1)
+            dvec.init_io_files(True)
+            dvec.read(i,0)
+            C[:, i] = np.array(dvec)
+        np.savetxt('ci_vect.txt', C)
 
     # return output specified by the user
     if((not return_ci_wfn) and (not return_rohf_wfn) and (not return_rohf_e)):
