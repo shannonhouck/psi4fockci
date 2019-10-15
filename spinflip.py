@@ -211,8 +211,6 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
     psi4.set_options(opts)
     e_cas, wfn_cas = energy('detci', ref_wfn=wfn_rohf, return_wfn=True, molecule=mol)
     print("CAS (%i %i): %6.12f" %(mol.molecular_charge(), mol.multiplicity(), e_cas))
-    psi4.core.print_variables() # printing Psi4 variables
-    psi4.core.clean_options() # more cleanup
 
     # obtain eigenvectors if needed
     # partly based on Daniel Smith's answer on Psi4 forums
@@ -222,12 +220,15 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
         C = np.zeros((wfn_cas_2.ndet(), n_roots))
         print(C.shape)
         for i in range(n_roots):
-            dvec = wfn_cas_2.new_civector(i+1, 53, True, True)
-            dvec.set_nvec(i+1)
+            dvec = wfn_cas_2.new_civector(i, 53, True, True)
+            dvec.set_nvec(i)
             dvec.init_io_files(True)
             dvec.read(i,0)
             C[:, i] = np.array(dvec)
         np.savetxt('ci_vect.txt', C)
+
+    psi4.core.print_variables() # printing Psi4 variables
+    psi4.core.clean_options() # more cleanup
 
     # return output specified by the user
     if((not return_ci_wfn) and (not return_rohf_wfn) and (not return_rohf_e)):
