@@ -220,8 +220,8 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
         C = np.zeros((wfn_cas_2.ndet(), n_roots))
         print(C.shape)
         for i in range(n_roots):
-            dvec = wfn_cas_2.new_civector(i, 53, True, True)
-            dvec.set_nvec(i)
+            dvec = wfn_cas_2.new_civector(i+1, 53, True, True)
+            dvec.set_nvec(i+1)
             dvec.init_io_files(True)
             dvec.read(i,0)
             C[:, i] = np.array(dvec)
