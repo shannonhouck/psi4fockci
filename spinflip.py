@@ -13,8 +13,8 @@ import numpy as np
 from numpy import linalg as LIN
 
 def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, return_ci_wfn=False, 
-            return_rohf_wfn=False, return_rohf_e=False, read_rohf_wfn="", write_rohf_wfn="", 
-            write_ci_vects=True, localize=False, frozen_docc=0, frozen_uocc=0):
+            return_rohf_wfn=False, return_rohf_e=False, read_rohf_wfn=False, wfn_rohf_in=None,
+            write_rohf_wfn="", write_ci_vects=True, localize=False, frozen_docc=0, frozen_uocc=0):
     """
     A method to run a spin-flip electron addition calculation.
 
@@ -78,12 +78,12 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
     psi4.set_options(opts)
     mol = ref_mol.clone() # clone molecule so original isn't modified
     # read in ROHF guess wavefunction if provided
-    if(read_rohf_wfn != ""):
+    if(read_rohf_wfn):
         # set up options and run
-        opts.update({'guess': 'read'})
         psi4.set_options(opts)
-        print("RUNNING ROHF FROM REFERENCE...\tCHARGE %i\tMULT %i" %(ref_mol.molecular_charge(), ref_mol.multiplicity()))
-        e_rohf, wfn_rohf = energy('scf', molecule=mol, return_wfn=True, options=opts, restart_file=read_rohf_wfn)
+        print("USING ROHF FROM REFERENCE...\tCHARGE %i\tMULT %i" %(ref_mol.molecular_charge(), ref_mol.multiplicity()))
+        wfn_rohf = wfn_rohf_in
+        e_rohf = wfn_rohf.energy()
     # else, run ROHF on reference state
     else:
         print("RUNNING REFERENCE...\tCHARGE %i\tMULT %i" %(ref_mol.molecular_charge(), ref_mol.multiplicity()))
@@ -95,7 +95,7 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
 
     # saving npz file of wavefunction
     if(write_rohf_wfn != ""):
-        shutil.copy(glob.glob('./*.180.npz')[0], write_rohf_wfn)
+        wfn_rohf.to_file(write_rohf_wfn)
 
     # update molecular charge and multiplicity
     mol.set_molecular_charge(new_charge)
