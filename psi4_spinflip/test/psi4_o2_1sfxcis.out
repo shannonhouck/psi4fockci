@@ -1,0 +1,1042 @@
+
+    -----------------------------------------------------------------------
+          Psi4: An Open-Source Ab Initio Electronic Structure Package
+                               Psi4 1.2a1.dev479 
+
+                         Git: Rev {master} 8ec4166 
+
+
+    R. M. Parrish, L. A. Burns, D. G. A. Smith, A. C. Simmonett,
+    A. E. DePrince III, E. G. Hohenstein, U. Bozkaya, A. Yu. Sokolov,
+    R. Di Remigio, R. M. Richard, J. F. Gonthier, A. M. James,
+    H. R. McAlexander, A. Kumar, M. Saitow, X. Wang, B. P. Pritchard,
+    P. Verma, H. F. Schaefer III, K. Patkowski, R. A. King, E. F. Valeev,
+    F. A. Evangelista, J. M. Turney, T. D. Crawford, and C. D. Sherrill,
+    J. Chem. Theory Comput. 13(7) pp 3185--3197 (2017).
+    (doi: 10.1021/acs.jctc.7b00174)
+
+    -----------------------------------------------------------------------
+
+
+    Psi4 started on: Monday, 27 November 2017 10:12AM
+
+    Process ID:   3534
+    PSIDATADIR: /usr/local/psi4/share/psi4
+    Memory:     500.0 MiB
+    Threads:    1
+    
+  ==> Input File <==
+
+--------------------------------------------------------------------------
+import spinflip
+from spinflip import sf_cas
+
+mol = psi4.core.Molecule.create_molecule_from_string("""
+0 3
+O
+O 1 1.2
+symmetry c1
+""")
+# set target charge and multiplicity
+charge = 0
+multiplicity = 1
+
+set{
+        num_roots    	10 
+        guess_vector 	unit
+	#diag_method	rsp
+}
+
+# running the spin-flip calculation
+opts = {'basis': 'cc-pvdz', 'calc_s_squared':'true'}
+#opts = {'basis': 'sto-3g'}
+#e = sf_cas( 0, 1, mol, add_opts=opts )
+#e = sf_cas( 0, 1, mol, conf_space="", add_opts=opts )
+#e = sf_cas( 0, 1, mol, conf_space="S", add_opts=opts )
+#e = sf_cas( 0, 1, mol, conf_space="1x", add_opts=opts )
+#e = sf_cas( 0, 1, mol, conf_space="2x", add_opts=opts )
+e = sf_cas( 0, 1, mol, conf_space="xcis", add_opts=opts )
+
+--------------------------------------------------------------------------
+
+*** tstart() called on sinatra
+*** at Mon Nov 27 10:12:50 2017
+
+   => Loading Basis Set <=
+
+    Name: CC-PVDZ
+    Role: ORBITAL
+    Keyword: BASIS
+    atoms 1-2 entry O          line   198 file /usr/local/psi4/share/psi4/basis/cc-pvdz.gbs 
+
+
+         ---------------------------------------------------------
+                                   SCF
+            by Justin Turney, Rob Parrish, Andy Simmonett
+                             and Daniel Smith
+                             ROHF Reference
+                        1 Threads,    500 MiB Core
+         ---------------------------------------------------------
+
+  ==> Geometry <==
+
+    Molecular point group: c1
+    Full point group: D_inf_h
+
+    Geometry (in Angstrom), charge = 0, multiplicity = 3:
+
+       Center              X                  Y                   Z               Mass       
+    ------------   -----------------  -----------------  -----------------  -----------------
+           O          0.000000000000     0.000000000000    -0.600000000000    15.994914619560
+           O          0.000000000000     0.000000000000     0.600000000000    15.994914619560
+
+  Running in c1 symmetry.
+
+  Rotational constants: A = ************  B =      1.46380  C =      1.46380 [cm^-1]
+  Rotational constants: A = ************  B =  43883.65311  C =  43883.65311 [MHz]
+  Nuclear repulsion =   28.222784458133329
+
+  Charge       = 0
+  Multiplicity = 3
+  Electrons    = 16
+  Nalpha       = 9
+  Nbeta        = 7
+
+  ==> Algorithm <==
+
+  SCF Algorithm Type is PK.
+  DIIS enabled.
+  MOM disabled.
+  Fractional occupation disabled.
+  Guess Type is SAD.
+  Energy threshold   = 1.00e-12
+  Density threshold  = 1.00e-12
+  Integral threshold = 0.00e+00
+
+  ==> Primary Basis <==
+
+  Basis Set: CC-PVDZ
+    Blend: CC-PVDZ
+    Number of shells: 12
+    Number of basis function: 28
+    Number of Cartesian functions: 30
+    Spherical Harmonics?: true
+    Max angular momentum: 2
+
+  ==> Pre-Iterations <==
+
+   -------------------------------------------------------
+    Irrep   Nso     Nmo     Nalpha   Nbeta   Ndocc  Nsocc
+   -------------------------------------------------------
+     A         28      28       0       0       0       0
+   -------------------------------------------------------
+    Total      28      28       9       7       7       2
+   -------------------------------------------------------
+
+  ==> Integral Setup <==
+
+  Using in-core PK algorithm.
+   Calculation information:
+      Number of atoms:                   2
+      Number of AO shells:              12
+      Number of primitives:             44
+      Number of atomic orbitals:        30
+      Number of basis functions:        28
+
+      Integral cutoff                 1.00e-12
+      Number of threads:                 1
+
+  Performing in-core PK
+  Using 165242 doubles for integral storage.
+  We computed 3081 shell quartets total.
+  Whereas there are 3081 unique shell quartets.
+  ==> DiskJK: Disk-Based J/K Matrices <==
+
+    J tasked:                  Yes
+    K tasked:                  Yes
+    wK tasked:                  No
+    Memory (MB):               375
+    Schwarz Cutoff:          1E-12
+
+    OpenMP threads:              1
+  Minimum eigenvalue in the overlap matrix is 1.8713476397E-02.
+  Using Symmetric Orthogonalization.
+
+  SCF Guess: Superposition of Atomic Densities via on-the-fly atomic UHF.
+
+  ==> Iterations <==
+
+                        Total Energy        Delta E     RMS |[F,P]|
+
+   @ROHF iter   0:  -160.45171004001503   -1.60452e+02   0.00000e+00 
+   @ROHF iter   1:   -69.33099202400162    9.11207e+01   1.02106e-01 
+   @ROHF iter   2:  -126.07470308576455   -5.67437e+01   1.09474e-01 
+   @ROHF iter   3:  -128.85182389079731   -2.77712e+00   1.00415e-01 
+   @ROHF iter   4:  -129.17813267277953   -3.26309e-01   1.01176e-01 
+   @ROHF iter   5:  -129.24149912067139   -6.33664e-02   1.01350e-01 
+   @ROHF iter   6:  -129.25603158257408   -1.45325e-02   1.01383e-01 
+   @ROHF iter   7:  -129.25902857049178   -2.99699e-03   1.01390e-01 
+   @ROHF iter   8:  -129.25968025102614   -6.51681e-04   1.01392e-01 
+   @ROHF iter   9:  -129.25981774753282   -1.37497e-04   1.01392e-01 
+   @ROHF iter  10:  -129.25984721019915   -2.94627e-05   1.01392e-01 
+   @ROHF iter  11:  -129.25985346838425   -6.25819e-06   1.01392e-01 
+   @ROHF iter  12:  -129.25985480384423   -1.33546e-06   1.01392e-01 
+   @ROHF iter  13:  -129.25985508807634   -2.84232e-07   1.01392e-01 
+   @ROHF iter  14:  -129.25985514865602   -6.05797e-08   1.01392e-01 
+   @ROHF iter  15:  -129.25985516155760   -1.29016e-08   1.01392e-01 
+   @ROHF iter  16:  -129.25985516430626   -2.74866e-09   1.01392e-01 
+   @ROHF iter  17:  -129.25985516489166   -5.85402e-10   1.01392e-01 
+   @ROHF iter  18:  -129.25985516501632   -1.24658e-10   1.01392e-01 
+   @ROHF iter  19:  -129.25985516504301   -2.66880e-11   1.01392e-01 
+   @ROHF iter  20:  -129.25985516504855   -5.54223e-12   1.01392e-01 
+   @ROHF iter  21:  -129.25985516504983   -1.27898e-12   1.01392e-01 DIIS
+   @ROHF iter  22:  -149.50146999707442   -2.02416e+01   1.48191e-02 DIIS
+   @ROHF iter  23:  -149.60029867560544   -9.88287e-02   4.49651e-03 DIIS
+   @ROHF iter  24:  -149.60918769047998   -8.88901e-03   5.55340e-04 DIIS
+   @ROHF iter  25:  -149.60943945830945   -2.51768e-04   1.67764e-04 DIIS
+   @ROHF iter  26:  -149.60946093550726   -2.14772e-05   1.53624e-05 DIIS
+   @ROHF iter  27:  -149.60946111933677   -1.83830e-07   1.21752e-06 DIIS
+   @ROHF iter  28:  -149.60946112072457   -1.38780e-09   1.23803e-07 DIIS
+   @ROHF iter  29:  -149.60946112073850   -1.39266e-11   8.25314e-09 DIIS
+   @ROHF iter  30:  -149.60946112073870   -1.98952e-13   6.23446e-10 DIIS
+   @ROHF iter  31:  -149.60946112073876   -5.68434e-14   2.76784e-10 DIIS
+   @ROHF iter  32:  -149.60946112073881   -5.68434e-14   2.59620e-10 DIIS
+   @ROHF iter  33:  -149.60946112073870    1.13687e-13   6.84428e-12 DIIS
+   @ROHF iter  34:  -149.60946112073870    0.00000e+00   3.97147e-12 DIIS
+   @ROHF iter  35:  -149.60946112073867    2.84217e-14   1.63550e-12 DIIS
+   @ROHF iter  36:  -149.60946112073864    2.84217e-14   8.89552e-13 DIIS
+
+  ==> Post-Iterations <==
+
+    Orbital Energies (a.u.)
+    -----------------------
+
+    Doubly Occupied:                                                      
+
+       1A    -20.726284     2A    -20.725328     3A     -1.660160  
+       4A     -1.095106     5A     -0.731551     6A     -0.704861  
+       7A     -0.704861  
+
+    Singly Occupied:                                                      
+
+       8A     -0.203970     9A     -0.203970  
+
+    Virtual:                                                              
+
+      10A      0.473562    11A      1.082369    12A      1.109876  
+      13A      1.109876    14A      1.150244    15A      1.217217  
+      16A      1.217217    17A      1.327318    18A      1.979315  
+      19A      2.402247    20A      2.402247    21A      2.679326  
+      22A      2.679326    23A      3.013562    24A      3.013562  
+      25A      3.201432    26A      3.693199    27A      3.693199  
+      28A      4.193392  
+
+    Final Occupation by Irrep:
+              A 
+    DOCC [     7 ]
+    SOCC [     2 ]
+
+  Energy converged.
+
+  @ROHF Final Energy:  -149.60946112073864
+
+   => Energetics <=
+
+    Nuclear Repulsion Energy =             28.2227844581333294
+    One-Electron Energy =                -261.9169888840750673
+    Two-Electron Energy =                  84.0847433052030908
+    Total Energy =                       -149.6094611207386436
+
+
+
+Properties will be evaluated at   0.000000,   0.000000,   0.000000 Bohr
+
+Properties computed using the SCF density matrix
+
+  Nuclear Dipole Moment: (a.u.)
+     X:     0.0000      Y:     0.0000      Z:     0.0000
+
+  Electronic Dipole Moment: (a.u.)
+     X:    -0.0000      Y:    -0.0000      Z:    -0.0000
+
+  Dipole Moment: (a.u.)
+     X:    -0.0000      Y:    -0.0000      Z:    -0.0000     Total:     0.0000
+
+  Dipole Moment: (Debye)
+     X:    -0.0000      Y:    -0.0000      Z:    -0.0000     Total:     0.0000
+
+
+*** tstop() called on sinatra at Mon Nov 27 10:12:50 2017
+Module time:
+	user time   =       0.26 seconds =       0.00 minutes
+	system time =       0.36 seconds =       0.01 minutes
+	total time  =          0 seconds =       0.00 minutes
+Total time:
+	user time   =       0.26 seconds =       0.00 minutes
+	system time =       0.36 seconds =       0.01 minutes
+	total time  =          0 seconds =       0.00 minutes
+
+*** tstart() called on sinatra
+*** at Mon Nov 27 10:12:50 2017
+
+   => Loading Basis Set <=
+
+    Name: CC-PVDZ
+    Role: ORBITAL
+    Keyword: BASIS
+    atoms 1-2 entry O          line   198 file /usr/local/psi4/share/psi4/basis/cc-pvdz.gbs 
+
+
+         ---------------------------------------------------------
+                                   SCF
+            by Justin Turney, Rob Parrish, Andy Simmonett
+                             and Daniel Smith
+                             ROHF Reference
+                        1 Threads,    500 MiB Core
+         ---------------------------------------------------------
+
+  ==> Geometry <==
+
+    Molecular point group: c1
+    Full point group: D_inf_h
+
+    Geometry (in Angstrom), charge = 0, multiplicity = 1:
+
+       Center              X                  Y                   Z               Mass       
+    ------------   -----------------  -----------------  -----------------  -----------------
+           O          0.000000000000     0.000000000000    -0.600000000000    15.994914619560
+           O          0.000000000000     0.000000000000     0.600000000000    15.994914619560
+
+  Running in c1 symmetry.
+
+  Rotational constants: A = ************  B =      1.46380  C =      1.46380 [cm^-1]
+  Rotational constants: A = ************  B =  43883.65311  C =  43883.65311 [MHz]
+  Nuclear repulsion =   28.222784458133329
+
+  Charge       = 0
+  Multiplicity = 1
+  Electrons    = 16
+  Nalpha       = 8
+  Nbeta        = 8
+
+  ==> Algorithm <==
+
+  SCF Algorithm Type is PK.
+  DIIS enabled.
+  MOM disabled.
+  Fractional occupation disabled.
+  Guess Type is SAD.
+  Energy threshold   = 1.00e-12
+  Density threshold  = 1.00e-12
+  Integral threshold = 0.00e+00
+
+  ==> Primary Basis <==
+
+  Basis Set: CC-PVDZ
+    Blend: CC-PVDZ
+    Number of shells: 12
+    Number of basis function: 28
+    Number of Cartesian functions: 30
+    Spherical Harmonics?: true
+    Max angular momentum: 2
+
+  ==> Pre-Iterations <==
+
+   -------------------------------------------------------
+    Irrep   Nso     Nmo     Nalpha   Nbeta   Ndocc  Nsocc
+   -------------------------------------------------------
+     A         28      28       0       0       0       0
+   -------------------------------------------------------
+    Total      28      28       8       8       8       0
+   -------------------------------------------------------
+
+  ==> Integral Setup <==
+
+  Using in-core PK algorithm.
+   Calculation information:
+      Number of atoms:                   2
+      Number of AO shells:              12
+      Number of primitives:             44
+      Number of atomic orbitals:        30
+      Number of basis functions:        28
+
+      Integral cutoff                 1.00e-12
+      Number of threads:                 1
+
+  Performing in-core PK
+  Using 165242 doubles for integral storage.
+  We computed 3081 shell quartets total.
+  Whereas there are 3081 unique shell quartets.
+  ==> DiskJK: Disk-Based J/K Matrices <==
+
+    J tasked:                  Yes
+    K tasked:                  Yes
+    wK tasked:                  No
+    Memory (MB):               375
+    Schwarz Cutoff:          1E-12
+
+    OpenMP threads:              1
+  Minimum eigenvalue in the overlap matrix is 1.8713476397E-02.
+  Using Symmetric Orthogonalization.
+
+  SCF Guess: Superposition of Atomic Densities via on-the-fly atomic UHF.
+
+  ==> Iterations <==
+
+                        Total Energy        Delta E     RMS |[F,P]|
+
+   @ROHF iter   0:  -149.87002568706291   -1.49870e+02   0.00000e+00 
+   @ROHF iter   1:   -69.23310942190629    8.06369e+01   9.86351e-02 
+   @ROHF iter   2:  -125.99557360762211   -5.67625e+01   9.94476e-02 
+   @ROHF iter   3:  -128.76710092002457   -2.77153e+00   9.44142e-02 
+   @ROHF iter   4:  -129.07588487191862   -3.08784e-01   9.50135e-02 
+   @ROHF iter   5:  -129.13770066570521   -6.18158e-02   9.51846e-02 
+   @ROHF iter   6:  -129.15192092154777   -1.42203e-02   9.52141e-02 
+   @ROHF iter   7:  -129.15485531882354   -2.93440e-03   9.52205e-02 
+   @ROHF iter   8:  -129.15549438021191   -6.39061e-04   9.52219e-02 
+   @ROHF iter   9:  -129.15562920802384   -1.34828e-04   9.52222e-02 
+   @ROHF iter  10:  -129.15565814069998   -2.89327e-05   9.52222e-02 
+   @ROHF iter  11:  -129.15566428818980   -6.14749e-06   9.52222e-02 
+   @ROHF iter  12:  -129.15566560153502   -1.31335e-06   9.52222e-02 
+   @ROHF iter  13:  -129.15566588120416   -2.79669e-07   9.52222e-02 
+   @ROHF iter  14:  -129.15566594086738   -5.96632e-08   9.52222e-02 
+   @ROHF iter  15:  -129.15566595358158   -1.27142e-08   9.52222e-02 
+   @ROHF iter  16:  -129.15566595629252   -2.71095e-09   9.52222e-02 
+   @ROHF iter  17:  -129.15566595687045   -5.77927e-10   9.52222e-02 
+   @ROHF iter  18:  -129.15566595699354   -1.23094e-10   9.52222e-02 
+   @ROHF iter  19:  -129.15566595701969   -2.61480e-11   9.52222e-02 
+   @ROHF iter  20:  -129.15566595702535   -5.65592e-12   9.52222e-02 
+   @ROHF iter  21:  -129.15566595702654   -1.19371e-12   9.52222e-02 DIIS
+   @ROHF iter  22:  -149.42288225102925   -2.02672e+01   1.43675e-02 DIIS
+   @ROHF iter  23:  -149.53549846767760   -1.12616e-01   3.96335e-03 DIIS
+   @ROHF iter  24:  -149.54381647151905   -8.31800e-03   6.82101e-04 DIIS
+   @ROHF iter  25:  -149.54418713235026   -3.70661e-04   1.73924e-04 DIIS
+   @ROHF iter  26:  -149.54421319248439   -2.60601e-05   3.96272e-05 DIIS
+   @ROHF iter  27:  -149.54421357082504   -3.78341e-07   4.30656e-05 DIIS
+   @ROHF iter  28:  -149.54421412452427   -5.53699e-07   3.20000e-05 DIIS
+   @ROHF iter  29:  -149.54421473899413   -6.14470e-07   1.93843e-06 DIIS
+   @ROHF iter  30:  -149.54421474735295   -8.35882e-09   4.63072e-07 DIIS
+   @ROHF iter  31:  -149.54421474772954   -3.76588e-10   9.85501e-08 DIIS
+   @ROHF iter  32:  -149.54421474775870   -2.91607e-11   2.58705e-08 DIIS
+   @ROHF iter  33:  -149.54421474776134   -2.64322e-12   9.79340e-09 DIIS
+   @ROHF iter  34:  -149.54421474776169   -3.41061e-13   1.64315e-09 DIIS
+   @ROHF iter  35:  -149.54421474776177   -8.52651e-14   8.91606e-11 DIIS
+   @ROHF iter  36:  -149.54421474776180   -2.84217e-14   7.69471e-12 DIIS
+   @ROHF iter  37:  -149.54421474776166    1.42109e-13   1.98822e-12 DIIS
+   @ROHF iter  38:  -149.54421474776183   -1.70530e-13   1.41809e-13 DIIS
+
+  ==> Post-Iterations <==
+
+    Orbital Energies (a.u.)
+    -----------------------
+
+    Doubly Occupied:                                                      
+
+       1A    -20.735172     2A    -20.734210     3A     -1.664830  
+       4A     -1.098914     5A     -0.768190     6A     -0.735663  
+       7A     -0.650865     8A     -0.461795  
+
+    Singly Occupied:                                                      
+
+    
+
+    Virtual:                                                              
+
+       9A      0.035494    10A      0.470340    11A      1.078859  
+      12A      1.097475    13A      1.119589    14A      1.147810  
+      15A      1.205938    16A      1.237823    17A      1.324292  
+      18A      1.976524    19A      2.393410    20A      2.404698  
+      21A      2.675905    22A      2.675960    23A      3.010126  
+      24A      3.010141    25A      3.197567    26A      3.678839  
+      27A      3.700525    28A      4.189789  
+
+    Final Occupation by Irrep:
+              A 
+    DOCC [     8 ]
+    SOCC [     0 ]
+
+  Energy converged.
+
+  @ROHF Final Energy:  -149.54421474776183
+
+   => Energetics <=
+
+    Nuclear Repulsion Energy =             28.2227844581333294
+    One-Electron Energy =                -261.8347217297410907
+    Two-Electron Energy =                  84.0677225238459584
+    Total Energy =                       -149.5442147477617993
+
+
+
+Properties will be evaluated at   0.000000,   0.000000,   0.000000 Bohr
+
+Properties computed using the SCF density matrix
+
+  Nuclear Dipole Moment: (a.u.)
+     X:     0.0000      Y:     0.0000      Z:     0.0000
+
+  Electronic Dipole Moment: (a.u.)
+     X:     0.0000      Y:     0.0000      Z:     0.0000
+
+  Dipole Moment: (a.u.)
+     X:     0.0000      Y:     0.0000      Z:     0.0000     Total:     0.0000
+
+  Dipole Moment: (Debye)
+     X:     0.0000      Y:     0.0000      Z:     0.0000     Total:     0.0000
+
+
+*** tstop() called on sinatra at Mon Nov 27 10:12:50 2017
+Module time:
+	user time   =       0.34 seconds =       0.01 minutes
+	system time =       0.63 seconds =       0.01 minutes
+	total time  =          0 seconds =       0.00 minutes
+Total time:
+	user time   =       0.61 seconds =       0.01 minutes
+	system time =       1.03 seconds =       0.02 minutes
+	total time  =          0 seconds =       0.00 minutes
+ MINTS: Wrapper to libmints.
+   by Justin Turney
+
+   Calculation information:
+      Number of threads:                 1
+      Number of atoms:                   2
+      Number of AO shells:              12
+      Number of SO shells:              12
+      Number of primitives:             44
+      Number of atomic orbitals:        30
+      Number of basis functions:        28
+
+      Number of irreps:                  1
+      Integral cutoff                 0.00e+00
+      Number of functions per irrep: [  28 ]
+
+ OEINTS: Overlap, kinetic, potential, dipole, and quadrupole integrals
+         stored in file 35.
+
+      Computing two-electron integrals...done
+      Computed 21245 non-zero two-electron integrals.
+        Stored in file 33.
+
+
+         ---------------------------------------------------------
+                          Configuration Interaction
+                            (a 'D E T C I' module)
+
+                 C. David Sherrill, Daniel G. A. Smith, and
+                              Matt L. Leininger
+         ---------------------------------------------------------
+
+Warning: Unit vec option not available for more than one root
+Warning: iopen=0,opentype!=closed. Making iopen=1
+
+   ==> Parameters <==
+
+    EX LEVEL       =        1      H0 BLOCKSIZE  =     1000
+    VAL EX LEVEL   =        0      H0 GUESS SIZE =     1000
+    H0COUPLINGSIZE =        0      H0 COUPLING   =       NO
+    MAXITER        =       24      NUM PRINT     =       20
+    NUM ROOTS      =       10      ICORE         =        1
+    PRINT LVL      =        1      FCI           =       NO
+    R CONV         = 1.00e-04      MIXED         =       NO
+    E CONV         = 1.00e-12      MIXED4        =      YES
+    R4S            =       NO      REPL OTF      =       NO
+    DIAG METHOD    =      SEM      FOLLOW ROOT   =        0
+    PRECONDITIONER = DAVIDSON      UPDATE        = DAVIDSON
+    S              =   0.0000      Ms0           =      YES
+    GUESS VECTOR   =  H0BLOCK      OPENTYPE      =  SINGLET
+    COLLAPSE SIZE  =        1      HD AVG        = EVANGELISTI
+    MAX NUM VECS   =      250      REF SYM       =     AUTO
+    IOPEN        =      YES
+
+    EX ALLOW       =  1 
+    STATE AVERAGE  =  0(1.00) 
+
+   ==> CI Orbital and Space information <==
+
+    RAS1 LVL      =        6      A RAS3 MAX    =        1
+    RAS1 MIN      =       13      B RAS3 MAX    =        1
+    A RAS1 LVL    =        6      RAS4 LVL      =       28
+    A RAS1 MIN    =        6      A RAS4 MAX    =        0
+    A RAS1 MAX    =        7      B RAS4 MAX    =        0
+    B RAS1 LVL    =        6      RAS4 MAX      =        0
+    B RAS1 MIN    =        6      A RAS34 MAX   =        1
+    B RAS1 MAX    =        7      B RAS34 MAX   =        1
+    RAS3 LVL      =        9      RAS34 MAX     =        1
+    RAS3 MAX      =        1
+   ------------------------------------
+               Space    Total     A
+   ------------------------------------
+                 Nso       28    28
+                 Nmo       28    28
+               Ndocc        8     8
+               Nsocc        0     0
+   ------------------------------------
+              CI Spaces
+   ------------------------------------
+        Dropped DOCC        0     0
+                RAS1        7     7
+                RAS2        2     2
+                RAS3       19    19
+                RAS4        0     0
+      Active (total)       28    28
+        Dropped UOCC        0     0
+   ------------------------------------
+
+   ==> Setting up CI strings <==
+
+    There are 294 alpha and 294 beta strings
+    The CI space requires 1438 (1.44E+03) determinants and 9 blocks
+
+   ==> Transforming CI integrals <==
+
+	Presorting SO-basis two-electron integrals.
+	Sorting File: SO Ints (nn|nn) nbuckets = 1
+	Transforming the one-electron integrals and constructing Fock matrices
+	Starting first half-transformation.
+	Sorting half-transformed integrals.
+	First half integral transformation complete.
+	Starting second half-transformation.
+	Two-electron integral transformation complete.
+
+   ==> Starting CI iterations <==
+
+    H0 Block Eigenvalue = -149.66222163
+
+    Simultaneous Expansion Method (Block Davidson Method)
+    Using 10 initial trial vectors
+
+(sem_iter): H0block_->H0b_diag[1][0] - H0block_->H0b_diag[2][0] = -0.697789 - 0.697789 = -1.395578 > 1.0E-8
+(sem_iter): H0block_->H0b_diag[3][5] - H0block_->H0b_diag[4][5] = 0.174613 - -0.174613 = 0.349225 > 1.0E-8
+(sem_iter): H0block_->H0b_diag[3][6] - H0block_->H0b_diag[4][6] = -0.473011 - 0.473011 = -0.946022 > 1.0E-8
+(sem_iter): H0block_->H0b_diag[3][7] - H0block_->H0b_diag[4][7] = 0.150314 - -0.150314 = 0.300629 > 1.0E-8
+(sem_iter): H0block_->H0b_diag[7][8] - H0block_->H0b_diag[8][8] = 0.703254 - -0.703254 = 1.406508 > 1.0E-8
+(sem_iter): H0block_->H0b_diag[12][9] - H0block_->H0b_diag[13][9] = -0.002690 - 0.002690 = -0.005380 > 1.0E-8
+(sem_iter): H0block_->H0b_diag[3][10] - H0block_->H0b_diag[4][10] = -0.436423 - 0.436423 = -0.872846 > 1.0E-8
+(sem_iter): H0block_->H0b_diag[9][15] - H0block_->H0b_diag[10][15] = -0.677360 - 0.677360 = -1.354720 > 1.0E-8
+(sem_iter): H0block_->H0b_diag[14][16] - H0block_->H0b_diag[15][16] = -0.119509 - 0.119509 = -0.239017 > 1.0E-8
+Computed <S^2> not as desired, discarding guess
+Computed <S^2> not as desired, discarding guess
+     Iter   Root       Total Energy       Delta E      C RMS
+
+   @CI  0:     0   -149.604211078003   -1.7783E+02   5.0007E-02  
+   @CI  0:     1   -149.604210966766   -1.7783E+02   5.0014E-02  
+   @CI  0:     2   -149.537673727088   -1.7776E+02   2.2731E-02  
+   @CI  0:     3   -149.461720312190   -1.7768E+02   4.9953E-02  
+   @CI  0:     4   -149.286542420805   -1.7751E+02   9.0215E-02  
+   @CI  0:     5   -149.286298494150   -1.7751E+02   9.6352E-02  
+   @CI  0:     6   -149.223875607006   -1.7745E+02   4.4497E-02  
+   @CI  0:     7   -149.223780711895   -1.7745E+02   4.8635E-02  
+   @CI  0:     8   -149.137420247477   -1.7736E+02   4.2632E-02  
+   @CI  0:     9   -149.121347477091   -1.7734E+02   3.2763E-02  
+
+   @CI  1:     0   -149.604321027034   -1.0995E-04   4.7835E-04  
+   @CI  1:     1   -149.604321009456   -1.1004E-04   5.1404E-04  
+   @CI  1:     2   -149.537696477420   -2.2750E-05   3.2513E-04  
+   @CI  1:     3   -149.462017858556   -2.9755E-04   4.5058E-03  
+   @CI  1:     4   -149.288035405759   -1.4930E-03   6.9157E-03  
+   @CI  1:     5   -149.288034318574   -1.7358E-03   7.0821E-03  
+   @CI  1:     6   -149.224118915407   -2.4331E-04   5.0193E-03  
+   @CI  1:     7   -149.224118878359   -3.3817E-04   4.7226E-03  
+   @CI  1:     8   -149.137768643112   -3.4840E-04   4.5561E-03  
+   @CI  1:     9   -149.121397312564   -4.9835E-05   4.9473E-04  
+
+   @CI  2:     0   -149.604321050985   -2.3951E-08   5.4677E-05  
+   @CI  2:     1   -149.604321050690   -4.1234E-08   7.1641E-05  
+   @CI  2:     2   -149.537696482214   -4.7943E-09   5.6054E-06  
+   @CI  2:     3   -149.462020509271   -2.6507E-06   1.0127E-03  
+   @CI  2:     4   -149.288043643042   -8.2373E-06   1.8775E-03  
+   @CI  2:     5   -149.288043464169   -9.1456E-06   1.9359E-03  
+   @CI  2:     6   -149.224120883175   -1.9678E-06   4.9858E-04  
+   @CI  2:     7   -149.224120841239   -1.9629E-06   5.2994E-04  
+   @CI  2:     8   -149.137770433299   -1.7902E-06   5.9376E-04  
+   @CI  2:     9   -149.121397330812   -1.8248E-08   5.3448E-05  
+
+   @CI  3:     0   -149.604321051335   -3.4973E-10   1.1808E-05  
+   @CI  3:     1   -149.604321051136   -4.4531E-10   1.2679E-05  
+   @CI  3:     2   -149.537696482222   -7.7875E-12   1.8454E-06  
+   @CI  3:     3   -149.462020780345   -2.7107E-07   3.0082E-04  
+   @CI  3:     4   -149.288044995401   -1.3524E-06   1.1127E-03  
+   @CI  3:     5   -149.288044860789   -1.3966E-06   9.2966E-04  
+   @CI  3:     6   -149.224120928277   -4.5101E-08   7.3699E-05  
+   @CI  3:     7   -149.224120923680   -8.2442E-08   1.3640E-04  
+   @CI  3:     8   -149.137770534931   -1.0163E-07   1.6587E-04  
+   @CI  3:     9   -149.121397332049   -1.2367E-09   2.7532E-05  
+
+   @CI  4:     0   -149.604321051361   -2.5750E-11   3.3587E-06  
+   @CI  4:     1   -149.604321051164   -2.8137E-11   3.4769E-06  
+   @CI  4:     2   -149.537696482222   -3.9790E-13   4.8095E-07 c
+   @CI  4:     3   -149.462020805475   -2.5130E-08   6.7129E-05  
+   @CI  4:     4   -149.288045261360   -2.6596E-07   4.1926E-04  
+   @CI  4:     5   -149.288045239663   -3.7887E-07   5.3717E-04  
+   @CI  4:     6   -149.224120930836   -2.5590E-09   2.8138E-05  
+   @CI  4:     7   -149.224120930644   -6.9642E-09   3.5446E-05  
+   @CI  4:     8   -149.137770545194   -1.0263E-08   5.0027E-05  
+   @CI  4:     9   -149.121397332474   -4.2544E-10   9.4184E-06  
+
+   @CI  5:     0   -149.604321051363   -2.3590E-12   5.2661E-07  
+   @CI  5:     1   -149.604321051166   -2.2737E-12   5.2947E-07  
+   @CI  5:     2   -149.537696482222   8.5265E-14   4.4707E-07 c
+   @CI  5:     3   -149.462020806542   -1.0663E-09   9.7159E-06  
+   @CI  5:     4   -149.288045313554   -5.2194E-08   8.8532E-05  
+   @CI  5:     5   -149.288045311386   -7.1723E-08   1.1028E-04  
+   @CI  5:     6   -149.224120931154   -3.1847E-10   1.0136E-05  
+   @CI  5:     7   -149.224120931053   -4.0839E-10   1.5281E-05  
+   @CI  5:     8   -149.137770545861   -6.6737E-10   2.0093E-05  
+   @CI  5:     9   -149.121397332498   -2.3903E-11   3.4032E-06  
+
+    Warning: Norm of correction (root 0) is < 1.0E-13
+    Warning: Norm of correction (root 1) is < 1.0E-13
+   @CI  6:     0   -149.604321051363   1.4211E-13   1.3031E-07 c
+   @CI  6:     1   -149.604321051166   -8.5265E-14   1.3027E-07 c
+   @CI  6:     2   -149.537696482222   -2.8422E-14   4.4858E-07 c
+   @CI  6:     3   -149.462020806559   -1.6996E-11   1.6475E-06  
+   @CI  6:     4   -149.288045317490   -3.9367E-09   5.5973E-05  
+   @CI  6:     5   -149.288045317317   -5.9314E-09   5.9455E-05  
+   @CI  6:     6   -149.224120931197   -4.3002E-11   3.5844E-06  
+   @CI  6:     7   -149.224120931113   -6.0368E-11   5.5769E-06  
+   @CI  6:     8   -149.137770545975   -1.1354E-10   8.3083E-06  
+   @CI  6:     9   -149.121397332500   -1.7906E-12   8.1891E-07  
+
+    Warning: Norm of correction (root 9) is < 1.0E-13
+   @CI  7:     0   -149.604321051363   -1.7053E-13   1.3041E-07 c
+   @CI  7:     1   -149.604321051166   -1.1369E-13   1.3017E-07 c
+   @CI  7:     2   -149.537696482222   0.0000E+00   4.4858E-07 c
+   @CI  7:     3   -149.462020806559   -3.1264E-13   4.1454E-07 c
+   @CI  7:     4   -149.288045318639   -1.1487E-09   2.7499E-05  
+   @CI  7:     5   -149.288045318313   -9.9561E-10   2.1062E-05  
+   @CI  7:     6   -149.224120931200   -2.6432E-12   8.1620E-07  
+   @CI  7:     7   -149.224120931118   -5.0306E-12   9.9708E-07  
+   @CI  7:     8   -149.137770545987   -1.2051E-11   1.5298E-06  
+   @CI  7:     9   -149.121397332500   -3.1264E-13   1.9381E-07 c
+
+    Warning: Norm of correction (root 6) is < 1.0E-13
+    Warning: Norm of correction (root 7) is < 1.0E-13
+    Warning: Norm of correction (root 8) is < 1.0E-13
+   @CI  8:     0   -149.604321051363   5.6843E-14   1.3033E-07 c
+   @CI  8:     1   -149.604321051166   2.8422E-14   1.3026E-07 c
+   @CI  8:     2   -149.537696482222   1.7053E-13   4.4858E-07 c
+   @CI  8:     3   -149.462020806559   -1.1369E-13   3.9530E-07 c
+   @CI  8:     4   -149.288045318847   -2.0830E-10   8.2012E-06  
+   @CI  8:     5   -149.288045318372   -5.9003E-11   4.0459E-06  
+   @CI  8:     6   -149.224120931200   2.8422E-14   1.5596E-07 c
+   @CI  8:     7   -149.224120931118   -1.4211E-13   2.3561E-07 c
+   @CI  8:     8   -149.137770545987   -4.2633E-13   3.8809E-07 c
+   @CI  8:     9   -149.121397332500   5.6843E-14   1.9381E-07 c
+
+   @CI  9:     0   -149.604321051363   1.9895E-13   1.3037E-07 c
+   @CI  9:     1   -149.604321051166   1.4211E-13   1.3021E-07 c
+   @CI  9:     2   -149.537696482222   -2.2737E-13   4.4858E-07 c
+   @CI  9:     3   -149.462020806559   -1.4211E-13   3.9530E-07 c
+   @CI  9:     4   -149.288045318863   -1.5433E-11   1.6670E-06  
+   @CI  9:     5   -149.288045318376   -3.5527E-12   9.5559E-07  
+   @CI  9:     6   -149.224120931200   -2.2737E-13   1.5595E-07 c
+   @CI  9:     7   -149.224120931118   -8.5265E-14   2.3561E-07 c
+   @CI  9:     8   -149.137770545987   -1.1369E-13   3.8809E-07 c
+   @CI  9:     9   -149.121397332500   8.5265E-14   1.9381E-07 c
+
+    Warning: Norm of correction (root 5) is < 1.0E-13
+   @CI 10:     0   -149.604321051363   -1.7053E-13   1.3031E-07 c
+   @CI 10:     1   -149.604321051166   -2.8422E-14   1.3027E-07 c
+   @CI 10:     2   -149.537696482222   2.2737E-13   4.4858E-07 c
+   @CI 10:     3   -149.462020806559   2.8422E-13   3.9530E-07 c
+   @CI 10:     4   -149.288045318864   -6.5370E-13   4.5459E-07 c
+   @CI 10:     5   -149.288045318376   -4.8317E-13   7.0008E-07 c
+   @CI 10:     6   -149.224120931200   1.4211E-13   1.5611E-07 c
+   @CI 10:     7   -149.224120931119   -1.7053E-13   2.3551E-07 c
+   @CI 10:     8   -149.137770545987   1.4211E-13   3.8809E-07 c
+   @CI 10:     9   -149.121397332500   -5.6843E-14   1.9381E-07 c
+
+
+   ==> Energetics <==
+
+    SCF energy =            0.000000000000000
+    Total CI energy =    -149.604321051363002
+
+   ==> DETCI root 0 information <==
+
+    DETCI Root 0 energy =  -149.604321051363002
+
+   The 20 most important determinants:
+
+    *   1   -0.496654  (    1,    0)  1AX 2AX 3AX 4AX 5AX 6AX 7AX 8AB 9AA 
+    *   2   -0.496654  (    0,    1)  1AX 2AX 3AX 4AX 5AX 6AX 7AX 8AA 9AB 
+    *   3    0.494305  (    1,    1)  1AX 2AX 3AX 4AX 5AX 6AX 7AX 9AX 
+    *   4   -0.494305  (    0,    0)  1AX 2AX 3AX 4AX 5AX 6AX 7AX 8AX 
+    *   5    0.029557  (   21,    4)  1AX 2AX 3AX 4AX 5AX 6AX 7AB 8AA 9AA 12AB 
+    *   6    0.029557  (    4,   21)  1AX 2AX 3AX 4AX 5AX 6AX 7AA 8AB 9AB 12AA 
+    *   7    0.029557  (    5,   22)  1AX 2AX 3AX 4AX 5AX 6AA 7AX 8AB 9AB 13AA 
+    *   8    0.029557  (   22,    5)  1AX 2AX 3AX 4AX 5AX 6AB 7AX 8AA 9AA 13AB 
+    *   9    0.026140  (   24,   16)  1AX 2AX 3AX 4AB 5AX 6AX 7AX 8AA 9AA 24AB 
+    *  10    0.026140  (   16,   24)  1AX 2AX 3AX 4AA 5AX 6AX 7AX 8AB 9AB 24AA 
+    *  11   -0.025505  (    4,   22)  1AX 2AX 3AX 4AX 5AX 6AA 7AX 8AB 9AB 12AA 
+    *  12   -0.025505  (   22,    4)  1AX 2AX 3AX 4AX 5AX 6AB 7AX 8AA 9AA 12AB 
+    *  13    0.025505  (   21,    5)  1AX 2AX 3AX 4AX 5AX 6AX 7AB 8AA 9AA 13AB 
+    *  14    0.025505  (    5,   21)  1AX 2AX 3AX 4AX 5AX 6AX 7AA 8AB 9AB 13AA 
+    *  15   -0.021249  (    1,   57)  1AX 2AX 3AX 4AX 5AX 6AA 7AX 8AB 9AA 12AB 
+    *  16   -0.021249  (   57,    1)  1AX 2AX 3AX 4AX 5AX 6AB 7AX 8AA 9AB 12AA 
+    *  17   -0.021249  (   77,    0)  1AX 2AX 3AX 4AX 5AX 6AX 7AB 8AB 9AA 13AA 
+    *  18   -0.021249  (    0,   77)  1AX 2AX 3AX 4AX 5AX 6AX 7AA 8AA 9AB 13AB 
+    *  19   -0.021135  (   78,    0)  1AX 2AX 3AX 4AX 5AX 6AB 7AX 8AB 9AA 13AA 
+    *  20   -0.021135  (    0,   78)  1AX 2AX 3AX 4AX 5AX 6AA 7AX 8AA 9AB 13AB 
+
+
+   ==> DETCI root 1 information <==
+
+    DETCI Root 1 energy =  -149.604321051166096
+
+   The 20 most important determinants:
+
+    *   1    0.496654  (    1,    1)  1AX 2AX 3AX 4AX 5AX 6AX 7AX 9AX 
+    *   2   -0.496654  (    0,    0)  1AX 2AX 3AX 4AX 5AX 6AX 7AX 8AX 
+    *   3    0.494305  (    1,    0)  1AX 2AX 3AX 4AX 5AX 6AX 7AX 8AB 9AA 
+    *   4    0.494305  (    0,    1)  1AX 2AX 3AX 4AX 5AX 6AX 7AX 8AA 9AB 
+    *   5   -0.029557  (   21,    5)  1AX 2AX 3AX 4AX 5AX 6AX 7AB 8AA 9AA 13AB 
+    *   6   -0.029557  (    5,   21)  1AX 2AX 3AX 4AX 5AX 6AX 7AA 8AB 9AB 13AA 
+    *   7    0.029557  (    4,   22)  1AX 2AX 3AX 4AX 5AX 6AA 7AX 8AB 9AB 12AA 
+    *   8    0.029557  (   22,    4)  1AX 2AX 3AX 4AX 5AX 6AB 7AX 8AA 9AA 12AB 
+    *   9    0.026140  (   15,   24)  1AX 2AX 3AX 4AA 5AX 6AX 7AX 8AB 9AB 23AA 
+    *  10    0.026140  (   24,   15)  1AX 2AX 3AX 4AB 5AX 6AX 7AX 8AA 9AA 23AB 
+    *  11    0.025505  (    4,   21)  1AX 2AX 3AX 4AX 5AX 6AX 7AA 8AB 9AB 12AA 
+    *  12    0.025505  (   21,    4)  1AX 2AX 3AX 4AX 5AX 6AX 7AB 8AA 9AA 12AB 
+    *  13    0.025505  (   22,    5)  1AX 2AX 3AX 4AX 5AX 6AB 7AX 8AA 9AA 13AB 
+    *  14    0.025505  (    5,   22)  1AX 2AX 3AX 4AX 5AX 6AA 7AX 8AB 9AB 13AA 
+    *  15   -0.021806  (    0,   78)  1AX 2AX 3AX 4AX 5AX 6AA 7AX 8AA 9AB 13AB 
+    *  16   -0.021806  (   78,    0)  1AX 2AX 3AX 4AX 5AX 6AB 7AX 8AB 9AA 13AA 
+    *  17    0.021806  (    1,   56)  1AX 2AX 3AX 4AX 5AX 6AX 7AA 8AB 9AA 12AB 
+    *  18    0.021806  (   56,    1)  1AX 2AX 3AX 4AX 5AX 6AX 7AB 8AA 9AB 12AA 
+    *  19   -0.020401  (   64,    0)  1AX 2AX 3AX 4AX 5AX 6AB 7AX 8AB 9AA 12AA 
+    *  20   -0.020401  (    0,   64)  1AX 2AX 3AX 4AX 5AX 6AA 7AX 8AA 9AB 12AB 
+
+
+   ==> DETCI root 2 information <==
+
+    DETCI Root 2 energy =  -149.537696482221747
+
+   The 20 most important determinants:
+
+    *   1   -0.703266  (    0,    0)  1AX 2AX 3AX 4AX 5AX 6AX 7AX 8AX 
+    *   2   -0.703266  (    1,    1)  1AX 2AX 3AX 4AX 5AX 6AX 7AX 9AX 
+    *   3   -0.024817  (    1,   56)  1AX 2AX 3AX 4AX 5AX 6AX 7AA 8AB 9AA 12AB 
+    *   4   -0.024817  (   56,    1)  1AX 2AX 3AX 4AX 5AX 6AX 7AB 8AA 9AB 12AA 
+    *   5   -0.024817  (    0,   78)  1AX 2AX 3AX 4AX 5AX 6AA 7AX 8AA 9AB 13AB 
+    *   6   -0.024817  (   78,    0)  1AX 2AX 3AX 4AX 5AX 6AB 7AX 8AB 9AA 13AA 
+    *   7   -0.023191  (    4,   21)  1AX 2AX 3AX 4AX 5AX 6AX 7AA 8AB 9AB 12AA 
+    *   8   -0.023191  (   21,    4)  1AX 2AX 3AX 4AX 5AX 6AX 7AB 8AA 9AA 12AB 
+    *   9    0.023191  (   22,    5)  1AX 2AX 3AX 4AX 5AX 6AB 7AX 8AA 9AA 13AB 
+    *  10    0.023191  (    5,   22)  1AX 2AX 3AX 4AX 5AX 6AA 7AX 8AB 9AB 13AA 
+    *  11    0.021229  (    5,   21)  1AX 2AX 3AX 4AX 5AX 6AX 7AA 8AB 9AB 13AA 
+    *  12    0.021229  (   21,    5)  1AX 2AX 3AX 4AX 5AX 6AX 7AB 8AA 9AA 13AB 
+    *  13    0.021229  (   22,    4)  1AX 2AX 3AX 4AX 5AX 6AB 7AX 8AA 9AA 12AB 
+    *  14    0.021229  (    4,   22)  1AX 2AX 3AX 4AX 5AX 6AA 7AX 8AB 9AB 12AA 
+    *  15   -0.014544  (   57,    0)  1AX 2AX 3AX 4AX 5AX 6AB 7AX 8AX 12AA 
+    *  16   -0.014544  (    0,   57)  1AX 2AX 3AX 4AX 5AX 6AA 7AX 8AX 12AB 
+    *  17   -0.014544  (   77,    1)  1AX 2AX 3AX 4AX 5AX 6AX 7AB 9AX 13AA 
+    *  18   -0.014544  (    1,   77)  1AX 2AX 3AX 4AX 5AX 6AX 7AA 9AX 13AB 
+    *  19    0.011900  (    0,   70)  1AX 2AX 3AX 4AX 5AX 6AX 7AA 8AX 13AB 
+    *  20    0.011900  (   70,    0)  1AX 2AX 3AX 4AX 5AX 6AX 7AB 8AX 13AA 
+
+
+   ==> DETCI root 3 information <==
+
+    DETCI Root 3 energy =  -149.462020806558968
+
+   The 20 most important determinants:
+
+    *   1    0.470671  (    1,   22)  1AX 2AX 3AX 4AX 5AX 6AA 7AX 8AB 9AX 
+    *   2    0.470671  (   22,    1)  1AX 2AX 3AX 4AX 5AX 6AB 7AX 8AA 9AX 
+    *   3   -0.470671  (   21,    0)  1AX 2AX 3AX 4AX 5AX 6AX 7AB 8AX 9AA 
+    *   4   -0.470671  (    0,   21)  1AX 2AX 3AX 4AX 5AX 6AX 7AA 8AX 9AB 
+    *   5    0.162645  (   21,    1)  1AX 2AX 3AX 4AX 5AX 6AX 7AB 8AA 9AX 
+    *   6    0.162645  (    1,   21)  1AX 2AX 3AX 4AX 5AX 6AX 7AA 8AB 9AX 
+    *   7    0.162645  (    0,   22)  1AX 2AX 3AX 4AX 5AX 6AA 7AX 8AX 9AB 
+    *   8    0.162645  (   22,    0)  1AX 2AX 3AX 4AX 5AX 6AB 7AX 8AX 9AA 
+    *   9    0.033784  (   25,    2)  1AX 2AX 3AB 4AX 5AX 6AX 7AX 8AA 9AA 10AB 
+    *  10    0.033784  (    2,   25)  1AX 2AX 3AA 4AX 5AX 6AX 7AX 8AB 9AB 10AA 
+    *  11    0.019610  (    1,    5)  1AX 2AX 3AX 4AX 5AX 6AX 7AX 9AA 13AB 
+    *  12    0.019610  (    5,    1)  1AX 2AX 3AX 4AX 5AX 6AX 7AX 9AB 13AA 
+    *  13    0.019610  (    0,    4)  1AX 2AX 3AX 4AX 5AX 6AX 7AX 8AA 12AB 
+    *  14    0.019610  (    4,    0)  1AX 2AX 3AX 4AX 5AX 6AX 7AX 8AB 12AA 
+    *  15   -0.016892  (    0,   39)  1AX 2AX 3AA 4AX 5AX 6AX 7AX 8AA 9AB 10AB 
+    *  16   -0.016892  (   39,    0)  1AX 2AX 3AB 4AX 5AX 6AX 7AX 8AB 9AA 10AA 
+    *  17    0.016892  (    1,   32)  1AX 2AX 3AA 4AX 5AX 6AX 7AX 8AB 9AA 10AB 
+    *  18    0.016892  (   32,    1)  1AX 2AX 3AB 4AX 5AX 6AX 7AX 8AA 9AB 10AA 
+    *  19    0.013850  (   23,    2)  1AX 2AX 3AX 4AX 5AB 6AX 7AX 8AA 9AA 10AB 
+    *  20    0.013850  (    2,   23)  1AX 2AX 3AX 4AX 5AA 6AX 7AX 8AB 9AB 10AA 
+
+
+   ==> DETCI root 4 information <==
+
+    DETCI Root 4 energy =  -149.288045318863539
+
+   The 20 most important determinants:
+
+    *   1   -0.702119  (   23,    0)  1AX 2AX 3AX 4AX 5AB 6AX 7AX 8AX 9AA 
+    *   2   -0.702119  (    0,   23)  1AX 2AX 3AX 4AX 5AA 6AX 7AX 8AX 9AB 
+    *   3   -0.053697  (   25,    0)  1AX 2AX 3AB 4AX 5AX 6AX 7AX 8AX 9AA 
+    *   4   -0.053697  (    0,   25)  1AX 2AX 3AA 4AX 5AX 6AX 7AX 8AX 9AB 
+    *   5   -0.022285  (   24,    5)  1AX 2AX 3AX 4AB 5AX 6AX 7AX 8AA 9AA 13AB 
+    *   6   -0.022285  (    5,   24)  1AX 2AX 3AX 4AA 5AX 6AX 7AX 8AB 9AB 13AA 
+    *   7   -0.021524  (   24,   12)  1AX 2AX 3AX 4AB 5AX 6AX 7AX 8AA 9AA 20AB 
+    *   8   -0.021524  (   12,   24)  1AX 2AX 3AX 4AA 5AX 6AX 7AX 8AB 9AB 20AA 
+    *   9    0.018800  (   80,    0)  1AX 2AX 3AX 4AB 5AX 6AX 7AX 8AB 9AA 13AA 
+    *  10    0.018800  (    0,   80)  1AX 2AX 3AX 4AA 5AX 6AX 7AX 8AA 9AB 13AB 
+    *  11    0.015613  (   59,    0)  1AX 2AX 3AX 4AB 5AX 6AX 7AX 8AX 12AA 
+    *  12    0.015613  (    0,   59)  1AX 2AX 3AX 4AA 5AX 6AX 7AX 8AX 12AB 
+    *  13   -0.015542  (   35,    0)  1AX 2AX 3AX 4AX 5AX 6AX 7AB 8AB 9AA 10AA 
+    *  14   -0.015542  (    0,   35)  1AX 2AX 3AX 4AX 5AX 6AX 7AA 8AA 9AB 10AB 
+    *  15    0.015538  (   21,    2)  1AX 2AX 3AX 4AX 5AX 6AX 7AB 8AA 9AA 10AB 
+    *  16    0.015538  (    2,   21)  1AX 2AX 3AX 4AX 5AX 6AX 7AA 8AB 9AB 10AA 
+    *  17    0.013039  (  178,    0)  1AX 2AX 3AX 4AB 5AX 6AX 7AX 8AB 9AA 20AA 
+    *  18    0.013039  (    0,  178)  1AX 2AX 3AX 4AA 5AX 6AX 7AX 8AA 9AB 20AB 
+    *  19   -0.010775  (   24,   11)  1AX 2AX 3AX 4AB 5AX 6AX 7AX 8AA 9AA 19AB 
+    *  20   -0.010775  (   11,   24)  1AX 2AX 3AX 4AA 5AX 6AX 7AX 8AB 9AB 19AA 
+
+
+   ==> DETCI root 5 information <==
+
+    DETCI Root 5 energy =  -149.288045318376135
+
+   The 20 most important determinants:
+
+    *   1    0.702119  (    1,   23)  1AX 2AX 3AX 4AX 5AA 6AX 7AX 8AB 9AX 
+    *   2    0.702119  (   23,    1)  1AX 2AX 3AX 4AX 5AB 6AX 7AX 8AA 9AX 
+    *   3    0.053697  (    1,   25)  1AX 2AX 3AA 4AX 5AX 6AX 7AX 8AB 9AX 
+    *   4    0.053697  (   25,    1)  1AX 2AX 3AB 4AX 5AX 6AX 7AX 8AA 9AX 
+    *   5   -0.022285  (    4,   24)  1AX 2AX 3AX 4AA 5AX 6AX 7AX 8AB 9AB 12AA 
+    *   6   -0.022285  (   24,    4)  1AX 2AX 3AX 4AB 5AX 6AX 7AX 8AA 9AA 12AB 
+    *   7   -0.021524  (   11,   24)  1AX 2AX 3AX 4AA 5AX 6AX 7AX 8AB 9AB 19AA 
+    *   8   -0.021524  (   24,   11)  1AX 2AX 3AX 4AB 5AX 6AX 7AX 8AA 9AA 19AB 
+    *   9   -0.018800  (    1,   59)  1AX 2AX 3AX 4AA 5AX 6AX 7AX 8AB 9AA 12AB 
+    *  10   -0.018800  (   59,    1)  1AX 2AX 3AX 4AB 5AX 6AX 7AX 8AA 9AB 12AA 
+    *  11   -0.015613  (    1,   80)  1AX 2AX 3AX 4AA 5AX 6AX 7AX 9AX 13AB 
+    *  12   -0.015613  (   80,    1)  1AX 2AX 3AX 4AB 5AX 6AX 7AX 9AX 13AA 
+    *  13    0.015542  (   29,    1)  1AX 2AX 3AX 4AX 5AX 6AB 7AX 8AA 9AB 10AA 
+    *  14    0.015542  (    1,   29)  1AX 2AX 3AX 4AX 5AX 6AA 7AX 8AB 9AA 10AB 
+    *  15    0.015538  (    2,   22)  1AX 2AX 3AX 4AX 5AX 6AA 7AX 8AB 9AB 10AA 
+    *  16    0.015538  (   22,    2)  1AX 2AX 3AX 4AX 5AX 6AB 7AX 8AA 9AA 10AB 
+    *  17   -0.013039  (    1,  157)  1AX 2AX 3AX 4AA 5AX 6AX 7AX 8AB 9AA 19AB 
+    *  18   -0.013039  (  157,    1)  1AX 2AX 3AX 4AB 5AX 6AX 7AX 8AA 9AB 19AA 
+    *  19    0.010775  (   12,   24)  1AX 2AX 3AX 4AA 5AX 6AX 7AX 8AB 9AB 20AA 
+    *  20    0.010775  (   24,   12)  1AX 2AX 3AX 4AB 5AX 6AX 7AX 8AA 9AA 20AB 
+
+
+   ==> DETCI root 6 information <==
+
+    DETCI Root 6 energy =  -149.224120931199963
+
+   The 20 most important determinants:
+
+    *   1    0.333847  (    0,   21)  1AX 2AX 3AX 4AX 5AX 6AX 7AA 8AX 9AB 
+    *   2    0.333847  (   21,    0)  1AX 2AX 3AX 4AX 5AX 6AX 7AB 8AX 9AA 
+    *   3    0.333847  (   22,    1)  1AX 2AX 3AX 4AX 5AX 6AB 7AX 8AA 9AX 
+    *   4    0.333847  (    1,   22)  1AX 2AX 3AX 4AX 5AX 6AA 7AX 8AB 9AX 
+    *   5    0.321238  (    1,   21)  1AX 2AX 3AX 4AX 5AX 6AX 7AA 8AB 9AX 
+    *   6    0.321238  (   21,    1)  1AX 2AX 3AX 4AX 5AX 6AX 7AB 8AA 9AX 
+    *   7   -0.321238  (    0,   22)  1AX 2AX 3AX 4AX 5AX 6AA 7AX 8AX 9AB 
+    *   8   -0.321238  (   22,    0)  1AX 2AX 3AX 4AX 5AX 6AB 7AX 8AX 9AA 
+    *   9   -0.138252  (    0,   37)  1AX 2AX 3AX 4AX 5AA 6AX 7AX 8AA 9AB 10AB 
+    *  10   -0.138252  (   37,    0)  1AX 2AX 3AX 4AX 5AB 6AX 7AX 8AB 9AA 10AA 
+    *  11   -0.138252  (   30,    1)  1AX 2AX 3AX 4AX 5AB 6AX 7AX 8AA 9AB 10AA 
+    *  12   -0.138252  (    1,   30)  1AX 2AX 3AX 4AX 5AA 6AX 7AX 8AB 9AA 10AB 
+    *  13    0.063981  (   30,    0)  1AX 2AX 3AX 4AX 5AB 6AX 7AX 8AX 10AA 
+    *  14    0.063981  (    0,   30)  1AX 2AX 3AX 4AX 5AA 6AX 7AX 8AX 10AB 
+    *  15   -0.063981  (    1,   37)  1AX 2AX 3AX 4AX 5AA 6AX 7AX 9AX 10AB 
+    *  16   -0.063981  (   37,    1)  1AX 2AX 3AX 4AX 5AB 6AX 7AX 9AX 10AA 
+    *  17    0.060245  (   44,    1)  1AX 2AX 3AX 4AX 5AB 6AX 7AX 8AA 9AB 11AA 
+    *  18    0.060245  (    1,   44)  1AX 2AX 3AX 4AX 5AA 6AX 7AX 8AB 9AA 11AB 
+    *  19    0.060245  (    0,   51)  1AX 2AX 3AX 4AX 5AA 6AX 7AX 8AA 9AB 11AB 
+    *  20    0.060245  (   51,    0)  1AX 2AX 3AX 4AX 5AB 6AX 7AX 8AB 9AA 11AA 
+
+
+   ==> DETCI root 7 information <==
+
+    DETCI Root 7 energy =  -149.224120931118648
+
+   The 20 most important determinants:
+
+    *   1   -0.333847  (    1,   21)  1AX 2AX 3AX 4AX 5AX 6AX 7AA 8AB 9AX 
+    *   2   -0.333847  (   21,    1)  1AX 2AX 3AX 4AX 5AX 6AX 7AB 8AA 9AX 
+    *   3    0.333847  (   22,    0)  1AX 2AX 3AX 4AX 5AX 6AB 7AX 8AX 9AA 
+    *   4    0.333847  (    0,   22)  1AX 2AX 3AX 4AX 5AX 6AA 7AX 8AX 9AB 
+    *   5    0.321238  (    1,   22)  1AX 2AX 3AX 4AX 5AX 6AA 7AX 8AB 9AX 
+    *   6    0.321238  (   22,    1)  1AX 2AX 3AX 4AX 5AX 6AB 7AX 8AA 9AX 
+    *   7    0.321238  (    0,   21)  1AX 2AX 3AX 4AX 5AX 6AX 7AA 8AX 9AB 
+    *   8    0.321238  (   21,    0)  1AX 2AX 3AX 4AX 5AX 6AX 7AB 8AX 9AA 
+    *   9   -0.138252  (    0,   30)  1AX 2AX 3AX 4AX 5AA 6AX 7AX 8AX 10AB 
+    *  10   -0.138252  (   30,    0)  1AX 2AX 3AX 4AX 5AB 6AX 7AX 8AX 10AA 
+    *  11    0.138252  (    1,   37)  1AX 2AX 3AX 4AX 5AA 6AX 7AX 9AX 10AB 
+    *  12    0.138252  (   37,    1)  1AX 2AX 3AX 4AX 5AB 6AX 7AX 9AX 10AA 
+    *  13   -0.063981  (   37,    0)  1AX 2AX 3AX 4AX 5AB 6AX 7AX 8AB 9AA 10AA 
+    *  14   -0.063981  (    0,   37)  1AX 2AX 3AX 4AX 5AA 6AX 7AX 8AA 9AB 10AB 
+    *  15   -0.063981  (   30,    1)  1AX 2AX 3AX 4AX 5AB 6AX 7AX 8AA 9AB 10AA 
+    *  16   -0.063981  (    1,   30)  1AX 2AX 3AX 4AX 5AA 6AX 7AX 8AB 9AA 10AB 
+    *  17    0.060245  (    0,   44)  1AX 2AX 3AX 4AX 5AA 6AX 7AX 8AX 11AB 
+    *  18    0.060245  (   44,    0)  1AX 2AX 3AX 4AX 5AB 6AX 7AX 8AX 11AA 
+    *  19   -0.060245  (    1,   51)  1AX 2AX 3AX 4AX 5AA 6AX 7AX 9AX 11AB 
+    *  20   -0.060245  (   51,    1)  1AX 2AX 3AX 4AX 5AB 6AX 7AX 9AX 11AA 
+
+
+   ==> DETCI root 8 information <==
+
+    DETCI Root 8 energy =  -149.137770545987195
+
+   The 20 most important determinants:
+
+    *   1   -0.434428  (   21,    1)  1AX 2AX 3AX 4AX 5AX 6AX 7AB 8AA 9AX 
+    *   2   -0.434428  (    1,   21)  1AX 2AX 3AX 4AX 5AX 6AX 7AA 8AB 9AX 
+    *   3   -0.434428  (   22,    0)  1AX 2AX 3AX 4AX 5AX 6AB 7AX 8AX 9AA 
+    *   4   -0.434428  (    0,   22)  1AX 2AX 3AX 4AX 5AX 6AA 7AX 8AX 9AB 
+    *   5    0.167145  (   30,    0)  1AX 2AX 3AX 4AX 5AB 6AX 7AX 8AX 10AA 
+    *   6    0.167145  (    0,   30)  1AX 2AX 3AX 4AX 5AA 6AX 7AX 8AX 10AB 
+    *   7    0.167145  (    1,   37)  1AX 2AX 3AX 4AX 5AA 6AX 7AX 9AX 10AB 
+    *   8    0.167145  (   37,    1)  1AX 2AX 3AX 4AX 5AB 6AX 7AX 9AX 10AA 
+    *   9    0.150121  (    1,   22)  1AX 2AX 3AX 4AX 5AX 6AA 7AX 8AB 9AX 
+    *  10    0.150121  (   22,    1)  1AX 2AX 3AX 4AX 5AX 6AB 7AX 8AA 9AX 
+    *  11   -0.150121  (    0,   21)  1AX 2AX 3AX 4AX 5AX 6AX 7AA 8AX 9AB 
+    *  12   -0.150121  (   21,    0)  1AX 2AX 3AX 4AX 5AX 6AX 7AB 8AX 9AA 
+    *  13   -0.069963  (   44,    0)  1AX 2AX 3AX 4AX 5AB 6AX 7AX 8AX 11AA 
+    *  14   -0.069963  (    0,   44)  1AX 2AX 3AX 4AX 5AA 6AX 7AX 8AX 11AB 
+    *  15   -0.069963  (    1,   51)  1AX 2AX 3AX 4AX 5AA 6AX 7AX 9AX 11AB 
+    *  16   -0.069963  (   51,    1)  1AX 2AX 3AX 4AX 5AB 6AX 7AX 9AX 11AA 
+    *  17    0.042582  (    0,    5)  1AX 2AX 3AX 4AX 5AX 6AX 7AX 8AA 13AB 
+    *  18    0.042582  (    5,    0)  1AX 2AX 3AX 4AX 5AX 6AX 7AX 8AB 13AA 
+    *  19   -0.042582  (    1,    4)  1AX 2AX 3AX 4AX 5AX 6AX 7AX 9AA 12AB 
+    *  20   -0.042582  (    4,    1)  1AX 2AX 3AX 4AX 5AX 6AX 7AX 9AB 12AA 
+
+
+   ==> DETCI root 9 information <==
+
+    DETCI Root 9 energy =  -149.121397332500152
+
+   The 20 most important determinants:
+
+    *   1    0.684672  (    2,    0)  1AX 2AX 3AX 4AX 5AX 6AX 7AX 8AB 10AA 
+    *   2    0.684672  (    0,    2)  1AX 2AX 3AX 4AX 5AX 6AX 7AX 8AA 10AB 
+    *   3   -0.141083  (    3,    0)  1AX 2AX 3AX 4AX 5AX 6AX 7AX 8AB 11AA 
+    *   4   -0.141083  (    0,    3)  1AX 2AX 3AX 4AX 5AX 6AX 7AX 8AA 11AB 
+    *   5    0.080394  (   24,    1)  1AX 2AX 3AX 4AB 5AX 6AX 7AX 8AA 9AX 
+    *   6    0.080394  (    1,   24)  1AX 2AX 3AX 4AA 5AX 6AX 7AX 8AB 9AX 
+    *   7   -0.026334  (   10,    0)  1AX 2AX 3AX 4AX 5AX 6AX 7AX 8AB 18AA 
+    *   8   -0.026334  (    0,   10)  1AX 2AX 3AX 4AX 5AX 6AX 7AX 8AA 18AB 
+    *   9    0.023418  (   17,   22)  1AX 2AX 3AX 4AX 5AX 6AA 7AX 8AB 9AB 25AA 
+    *  10    0.023418  (   22,   17)  1AX 2AX 3AX 4AX 5AX 6AB 7AX 8AA 9AA 25AB 
+    *  11   -0.019143  (  246,    0)  1AX 2AX 3AX 4AX 5AX 6AB 7AX 8AB 9AA 25AA 
+    *  12   -0.019143  (    0,  246)  1AX 2AX 3AX 4AX 5AX 6AA 7AX 8AA 9AB 25AB 
+    *  13    0.014344  (  238,    0)  1AX 2AX 3AX 4AX 5AX 6AX 7AB 8AX 25AA 
+    *  14    0.014344  (    0,  238)  1AX 2AX 3AX 4AX 5AX 6AX 7AA 8AX 25AB 
+    *  15   -0.014216  (   84,    0)  1AX 2AX 3AX 4AX 5AX 6AX 7AB 8AX 14AA 
+    *  16   -0.014216  (    0,   84)  1AX 2AX 3AX 4AX 5AX 6AX 7AA 8AX 14AB 
+    *  17    0.013216  (    0,  170)  1AX 2AX 3AX 4AX 5AA 6AX 7AX 8AX 20AB 
+    *  18    0.013216  (  170,    0)  1AX 2AX 3AX 4AX 5AB 6AX 7AX 8AX 20AA 
+    *  19   -0.011318  (    0,  182)  1AX 2AX 3AX 4AX 5AX 6AX 7AA 8AX 21AB 
+    *  20   -0.011318  (  182,    0)  1AX 2AX 3AX 4AX 5AX 6AX 7AB 8AX 21AA 
+
+		 "A good bug is a dead bug" 
+
+			 - Starship Troopers
+
+		 "I didn't write FORTRAN.  That's the problem."
+
+			 - Edward Valeev
+
+*** Psi4 exiting successfully. Buy a developer a beer!

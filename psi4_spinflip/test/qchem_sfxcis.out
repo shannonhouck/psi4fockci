@@ -1,0 +1,679 @@
+                  Welcome to Q-Chem
+     A Quantum Leap Into The Future Of Chemistry
+
+
+ Q-Chem 4.3, Q-Chem, Inc., Pleasanton, CA (2015)
+
+ Y. Shao,  Z. Gan,  E. Epifanovsky,  A. T. B. Gilbert,  M. Wormit,  
+ J. Kussmann,  A. W. Lange,  A. Behn,  J. Deng,  X. Feng,  D. Ghosh,  
+ M. Goldey,  P. R. Horn,  L. D. Jacobson,  I. Kaliman,  R. Z. Khaliullin,  
+ T. Kus,  A. Landau,  J. Liu,  E. I. Proynov,  Y. M. Rhee,  R. M. Richard,  
+ M. A. Rohrdanz,  R. P. Steele,  E. J. Sundstrom,  H. L. Woodcock III,  
+ P. M. Zimmerman,  D. Zuev,  B. Albrecht,  E. Alguire,  B. Austin,  
+ S. A. Baeppler,  G. J. O. Beran,  Y. A. Bernard,  E. Berquist,  
+ K. Brandhorst,  K. B. Bravaya,  S. T. Brown,  D. Casanova,  C.-M. Chang,  
+ Y. Chen,  S. H. Chien,  K. D. Closser,  D. L. Crittenden,  M. Diedenhofen,  
+ R. A. DiStasio Jr.,  H. Do,  A. D. Dutoi,  R. G. Edgar,  P.-T. Fang,  
+ S. Fatehi,  Q. Feng,  L. Fusti-Molnar,  A. Ghysels,  
+ A. Golubeva-Zadorozhnaya,  J. Gomes,  A. Gunina,  M. W. D. Hanson-Heine,  
+ P. H. P. Harbach,  A. W. Hauser,  E. G. Hohenstein,  Z. C. Holden,  K. Hui,  
+ T.-C. Jagau,  H. Ji,  B. Kaduk,  K. Khistyaev,  Jaehoon Kim,  Jihan Kim,  
+ R. A. King,  P. Klunzinger,  D. Kosenkov,  T. Kowalczyk,  C. M. Krauter,  
+ K. U. Lao,  A. Laurent,  K. V. Lawler,  S. Lehtola,  S. V. Levchenko,  
+ C. Y. Lin,  Y.-S. Lin,  F. Liu,  E. Livshits,  R. C. Lochan,  A. Luenser,  
+ P. Manohar,  S. F. Manzer,  S.-P. Mao,  N. Mardirossian,  A. V. Marenich,  
+ L. A. Martinez-Martinez,  S. A. Maurer,  N. J. Mayhall,  K. Nanda,  
+ C. M. Oana,  R. Olivares-Amaya,  D. P. O'Neill,  J. A. Parkhill,  
+ T. M. Perrine,  R. Peverati,  P. A. Pieniazek,  F. Plasser,  A. Prociuk,  
+ D. R. Rehn,  E. Rosta,  N. J. Russ,  N. Sergueev,  S. M. Sharada,  
+ S. Sharma,  D. W. Small,  A. Sodt,  T. Stauch,  T. Stein,  D. Stuck,  
+ Y.-C. Su,  A. J. W. Thom,  T. Tsuchimochi,  L. Vogt,  O. Vydrov,  T. Wang,  
+ M. A. Watson,  J. Wenzel,  A. White,  C. F. Williams,  V. Vanovschi,  
+ S. Yeganeh,  S. R. Yost,  Z.-Q. You,  I. Y. Zhang,  X. Zhang,  Y. Zhao,  
+ B. R. Brooks,  G. K. L. Chan,  D. M. Chipman,  C. J. Cramer,  
+ W. A. Goddard III,  M. S. Gordon,  W. J. Hehre,  A. Klamt,  
+ H. F. Schaefer III,  M. W. Schmidt,  C. D. Sherrill,  D. G. Truhlar,  
+ A. Warshel,  X. Xu,  A. Aspuru-Guzik,  R. Baer,  A. T. Bell,  N. A. Besley,  
+ J.-D. Chai,  A. Dreuw,  B. D. Dunietz,  T. R. Furlani,  S. R. Gwaltney,  
+ C.-P. Hsu,  Y. Jung,  J. Kong,  D. S. Lambrecht,  W. Liang,  C. Ochsenfeld,  
+ V. A. Rassolov,  L. V. Slipchenko,  J. E. Subotnik,  T. Van Voorhis,  
+ J. M. Herbert,  A. I. Krylov,  P. M. W. Gill,  M. Head-Gordon
+
+ Contributors to earlier versions of Q-Chem not listed above: 
+ R. D. Adamson,  J. Baker,  E. F. C. Byrd,  A. K. Chakraborty,  C.-L. Cheng,  
+ H. Dachsel,  R. J. Doerksen,  G. Hawkins,  A. Heyden,  S. Hirata,  
+ G. Kedziora,  F. J. Keil,  C. Kelley,  P. P. Korambath,  W. Kurlancheek,  
+ A. M. Lee,  M. S. Lee,  D. Liotard,  I. Lotan,  P. E. Maslen,  N. Nair,  
+ D. Neuhauser,  R. Olson,  B. Peters,  J. Ritchie,  N. E. Schultz,  
+ N. Shenvi,  A. C. Simmonett,  K. S. Thanthiriwatte,  Q. Wu,  W. Zhang
+
+ Please cite Q-Chem as follows:
+ Y. Shao et al., Mol. Phys. 113, 184-215 (2015)
+ DOI: 10.1080/00268976.2014.952696
+
+ Q-Chem 4.3.0 for Intel X86 EM64T Linux
+
+ Parts of Q-Chem use Armadillo 5.200.1 (Boston Tea Smuggler).
+ http://arma.sourceforge.net/
+
+ Q-Chem begins on Thu Nov 16 09:30:03 2017  
+
+
+Host: 0
+
+     Scratch files written to /home/nmayhall/scratch_qchem/qchem7910//
+ Dec1416 |home|nmayhall|qcSoftware|qchem|qchem.svn-casman|libmdc|qstr_RNUM -1
+ Using version located at /home/nmayhall/qcSoftware/qchem/qchem.svn-casman/bin/qchem
+
+
+Total Memory Limit in MB = 2000
+Mega-Array Size in MB = 62
+
+Checking the input file for inconsistencies... 	...done.
+Finally everything over in PARseQInput
+
+--------------------------------------------------------------
+User input:
+--------------------------------------------------------------
+$comment
+TMM ground and excited states
+$end 
+
+$molecule
+0 3
+O
+O 1 r1
+
+r1 1.2
+$end
+
+$rem
+jobtype           SP
+unrestricted      FALSE   ! SF-XCIS runs from ROHF triplet reference
+EXCHANGE          HF      ! Exact exchange
+BASIS            cc-pvdz 
+PURCAR            1       ! 5D
+SCF_CONVERGENCE   10
+SCF_ALGORITHM     DM
+MAX_SCF_CYCLES    100
+SPIN_FLIP         1       ! Not necessary for SF-XCIS
+SPIN_FLIP_XCIS    1       ! Do SF-XCIS
+CIS_N_ROOTS       3
+CIS_SINGLETS      1       ! Do singlets
+CIS_TRIPLETS      1       ! Do triplets
+CIS_CONVERGENCE   10
+MAX_CIS_CYCLES    100
+$end
+
+--------------------------------------------------------------
+ ----------------------------------------------------------------
+             Standard Nuclear Orientation (Angstroms)
+    I     Atom           X                Y                Z
+ ----------------------------------------------------------------
+    1      O       0.0000000000     0.0000000000    -0.6000000000
+    2      O       0.0000000000     0.0000000000     0.6000000000
+ ----------------------------------------------------------------
+ Molecular Point Group                 D*h   NOp =***
+ Largest Abelian Subgroup              D2h   NOp =  1
+ Nuclear Repulsion Energy =    28.2227845760 hartrees
+ There are        9 alpha and        7 beta electrons
+
+ Q-Chem warning in module /home/nmayhall/qcSoftware/qchem/qchem.svn-casman/forms1/BasisType.C, line 1452:
+
+ You are not using the predefined 5D/6D in this basis set.
+
+
+ Q-Chem warning in module /home/nmayhall/qcSoftware/qchem/qchem.svn-casman/forms1/BasisType.C, line 1375:
+
+ SAD: How to set up polarization functions for non-Pople basis?
+
+ Requested basis set is cc-pVDZ
+ There are 12 shells and 28 basis functions
+
+Total QAlloc Memory Limit   2000 MB
+Mega-Array Size        61 MB
+MEM_STATIC part        62 MB
+
+finished with qalloc call
+
+                       Distance Matrix (Angstroms)
+             O (  1)
+   O (  2)  1.200000
+
+ Job number = 2, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 2  <1-21|1-21>
+Symmetry turned off temporarily
+ Using the largest function pair in Schwarz integrals
+Total number of integrals generated =            7959
+Symmetry turned back on
+ A cutoff of  1.0D-14 yielded     78 shell pairs
+ There are       438 function pairs (       507 Cartesian)
+ Job number = 11, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 11  <1-21|22-22>
+
+ -------------------------------------------------------
+ OpenMP Integral Computing Module                       
+ Release: version 1.0, May 2013, Q-Chem Inc. Pittsburgh 
+ -------------------------------------------------------
+ Integral Job Info:
+ Integral job number is                      11
+ Integral operator is                         1
+ short-range coefficients                     0
+ long-range coefficients              100000000
+ Omega coefficients                           0
+ if combine SR and LR in K                    0
+ Integral screening is                        0
+ Integral computing path is                   2
+ max size of driver memory is            800000
+ size of driver memory is                593474
+ size of scratch memory is              3179904
+ max col of scratch BK array               1296
+ max len of scratch array in speh3          155
+ max len of scratch index in speh4           18
+ max int batch size is                      520
+ min int batch size is                       52
+ fixed nKL is                                52
+ max L of basis functions is                  2
+ order of int derivative is                   0
+ number of shells is                         12
+ number of basis is                          30
+ number of cartesian basis is                30
+ number of contracted shell pairs            78
+ number of primitive shell pairs            762
+ maxK2 (contraction) of shell pair           49
+ max number of K2 of shell pair               1
+ max number of CS2 of shell pair              8
+ max number of PS2 of shell pair            294
+ mem total for path MDJ                   11420
+ -------------------------------------------------------
+ Smallest overlap matrix eigenvalue = 1.90E-02
+ Multipole matrices computed through 2nd order
+
+  Scale SEOQF with 1.000000e+00/1.000000e+00/1.000000e+00
+
+ Standard Electronic Orientation quadrupole field applied
+ Nucleus-field energy     =    -0.0000000062 hartrees
+GuessMan:  IGuess = 101
+ Constructing guess Fock matrix from core Hamiltonian
+ Applying Wolfsberg-Helmholtz approximation
+scfman initvdwdat 
+ A restricted Hartree-Fock SCF calculation will be
+ performed using direct minimization
+ SCF converges when RMS gradient is below 1.0E-10
+Finding J and K together
+ Job number = 22, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 22  <1-21|1-21>
+Approximate symmetry reduction factor = 1.000000
+Storing 1411.87% of integrals
+Total number of integrals generated =          132504
+ MakeJK  time:  CPU       0.04 s  wall       0.04 s
+Fock build time:  0.04 s (CPU) 0.04 s (wall)
+ ---------------------------------------
+  Cycle       Energy        RMS Gradient
+ ---------------------------------------
+    1    -149.2001329350      2.35E-01  00000
+Finding J and K together
+ Job number = 22, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 22  <1-21|1-21>
+Approximate symmetry reduction factor = 1.000000
+Storing 1411.87% of integrals
+Reusing in-core integrals buffer for job 22
+ MakeJK  time:  CPU       0.02 s  wall       0.02 s
+Fock build time:  0.02 s (CPU) 0.02 s (wall)
+    2    -149.5312177109      9.54E-02  00000
+Finding J and K together
+ Job number = 22, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 22  <1-21|1-21>
+Approximate symmetry reduction factor = 1.000000
+Storing 1411.87% of integrals
+Reusing in-core integrals buffer for job 22
+ MakeJK  time:  CPU       0.02 s  wall       0.02 s
+Fock build time:  0.02 s (CPU) 0.02 s (wall)
+    3    -149.6050618390      2.12E-02  00000
+Finding J and K together
+ Job number = 22, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 22  <1-21|1-21>
+Approximate symmetry reduction factor = 1.000000
+Storing 1411.87% of integrals
+Reusing in-core integrals buffer for job 22
+ MakeJK  time:  CPU       0.02 s  wall       0.02 s
+Fock build time:  0.02 s (CPU) 0.02 s (wall)
+    4    -149.6091377649      6.94E-03  00000
+Finding J and K together
+ Job number = 22, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 22  <1-21|1-21>
+Approximate symmetry reduction factor = 1.000000
+Storing 1411.87% of integrals
+Reusing in-core integrals buffer for job 22
+ MakeJK  time:  CPU       0.02 s  wall       0.02 s
+Fock build time:  0.02 s (CPU) 0.02 s (wall)
+    5    -149.6094535808      9.51E-04  00000
+Finding J and K together
+ Job number = 22, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 22  <1-21|1-21>
+Approximate symmetry reduction factor = 1.000000
+Storing 1411.87% of integrals
+Reusing in-core integrals buffer for job 22
+ MakeJK  time:  CPU       0.02 s  wall       0.02 s
+Fock build time:  0.02 s (CPU) 0.02 s (wall)
+    6    -149.6094609780      1.15E-04  00000
+Finding J and K together
+ Job number = 22, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 22  <1-21|1-21>
+Approximate symmetry reduction factor = 1.000000
+Storing 1411.87% of integrals
+Reusing in-core integrals buffer for job 22
+ MakeJK  time:  CPU       0.02 s  wall       0.02 s
+Fock build time:  0.02 s (CPU) 0.02 s (wall)
+    7    -149.6094611191      1.34E-05  00000
+Finding J and K together
+ Job number = 22, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 22  <1-21|1-21>
+Approximate symmetry reduction factor = 1.000000
+Storing 1411.87% of integrals
+Reusing in-core integrals buffer for job 22
+ MakeJK  time:  CPU       0.02 s  wall       0.02 s
+Fock build time:  0.02 s (CPU) 0.02 s (wall)
+    8    -149.6094611212      4.35E-07  00000 BFGS subspace was reset
+Finding J and K together
+ Job number = 22, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 22  <1-21|1-21>
+Approximate symmetry reduction factor = 1.000000
+Storing 1411.87% of integrals
+Reusing in-core integrals buffer for job 22
+ MakeJK  time:  CPU       0.02 s  wall       0.02 s
+Fock build time:  0.02 s (CPU) 0.02 s (wall)
+    9    -149.6094611213      2.79E-07  00000
+Finding J and K together
+ Job number = 22, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 22  <1-21|1-21>
+Approximate symmetry reduction factor = 1.000000
+Storing 1411.87% of integrals
+Reusing in-core integrals buffer for job 22
+ MakeJK  time:  CPU       0.02 s  wall       0.02 s
+Fock build time:  0.02 s (CPU) 0.02 s (wall)
+   10    -149.6094611213      7.31E-08  00000
+Finding J and K together
+ Job number = 22, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 22  <1-21|1-21>
+Approximate symmetry reduction factor = 1.000000
+Storing 1411.87% of integrals
+Reusing in-core integrals buffer for job 22
+ MakeJK  time:  CPU       0.02 s  wall       0.02 s
+Fock build time:  0.02 s (CPU) 0.02 s (wall)
+   11    -149.6094611213      1.29E-08  00000
+Finding J and K together
+ Job number = 22, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 22  <1-21|1-21>
+Approximate symmetry reduction factor = 1.000000
+Storing 1411.87% of integrals
+Reusing in-core integrals buffer for job 22
+ MakeJK  time:  CPU       0.02 s  wall       0.02 s
+Fock build time:  0.02 s (CPU) 0.02 s (wall)
+   12    -149.6094611213      3.17E-09  00000 Energy rises: line searc
+Finding J and K together
+ Job number = 22, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 22  <1-21|1-21>
+Approximate symmetry reduction factor = 1.000000
+Storing 1411.87% of integrals
+Reusing in-core integrals buffer for job 22
+ MakeJK  time:  CPU       0.02 s  wall       0.02 s
+Fock build time:  0.02 s (CPU) 0.02 s (wall)
+   13    -149.6094611213      1.24E-09  00000
+Finding J and K together
+ Job number = 22, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 22  <1-21|1-21>
+Approximate symmetry reduction factor = 1.000000
+Storing 1411.87% of integrals
+Reusing in-core integrals buffer for job 22
+ MakeJK  time:  CPU       0.02 s  wall       0.02 s
+Fock build time:  0.02 s (CPU) 0.02 s (wall)
+   14    -149.6094611213      9.38E-11  00000 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 0.26 s  wall 0.26 s
+ SCF   energy in the final basis set = -149.6094611213
+ Total energy in the final basis set = -149.6094611213
+Symmetry turned off temporarily
+OV_DIM:  Setting MaxSz  = 300
+OV_DIM:  Setting MaxSpc = 300
+ Spin-flip XCIS calculation will be performed
+ Triplet excitation energies requested
+ Singlet excitation energies requested
+ CIS energy converged when residual is below 10e-10
+ Using static memory for CIS/TDDFT iterations
+ Guess(           3 ): doubly excited closed shell
+ NRoots was altered as:  3 -->  7
+ ---------------------------------------------------
+ Iter    Rts Conv    Rts Left    Ttl Dev     Max Dev
+ ---------------------------------------------------
+ Job number = 39, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 39  <1-21|1-21>
+Storing 1411.87% of integrals
+ Job number = 39, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 39  <1-21|1-21>
+Storing 1411.87% of integrals
+   1         0           7      0.049194    0.013673
+ Job number = 39, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 39  <1-21|1-21>
+Storing 1411.87% of integrals
+   2         0           7      0.007551    0.002713
+ Job number = 39, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 39  <1-21|1-21>
+Storing 1411.87% of integrals
+   3         0           7      0.003372    0.001406
+ Job number = 39, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 39  <1-21|1-21>
+Storing 1411.87% of integrals
+   4         0           7      0.001253    0.000377
+ Job number = 39, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 39  <1-21|1-21>
+Storing 1411.87% of integrals
+   5         0           7      0.000403    0.000175
+ Job number = 39, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 39  <1-21|1-21>
+Storing 1411.87% of integrals
+   6         0           7      0.000100    0.000057
+ Job number = 39, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 39  <1-21|1-21>
+Storing 1411.87% of integrals
+   7         0           7      0.000042    0.000028
+ Job number = 39, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 39  <1-21|1-21>
+Storing 1411.87% of integrals
+   8         0           7      0.000013    0.000006
+ Job number = 39, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 39  <1-21|1-21>
+Storing 1411.87% of integrals
+   9         0           7      0.000003    0.000001
+ Job number = 39, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 39  <1-21|1-21>
+Storing 1411.87% of integrals
+  10         0           7      0.000001    0.000000
+ Job number = 39, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 39  <1-21|1-21>
+Storing 1411.87% of integrals
+  11         0           7      0.000000    0.000000
+ Job number = 39, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 39  <1-21|1-21>
+Storing 1411.87% of integrals
+  12         1           6      0.000000    0.000000
+ Job number = 39, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 39  <1-21|1-21>
+Storing 1411.87% of integrals
+  13         4           3      0.000000    0.000000
+ Job number = 39, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 39  <1-21|1-21>
+Storing 1411.87% of integrals
+  14         4           3      0.000000    0.000000
+ Job number = 39, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 39  <1-21|1-21>
+Storing 1411.87% of integrals
+  15         5           2      0.000000    0.000000
+ Job number = 39, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 39  <1-21|1-21>
+Storing 1411.87% of integrals
+  16         7           0      0.000000    0.000000    Roots Converged
+ ------------------------------------------------------------------------------
+                     TDDFT/TDA     : Timing summary (seconds)
+ ------------------------------------------------------------------------------
+     job step          cpu (% of tot)      sys (% of tot)     wall (% of tot)
+ ------------------------------------------------------------------------------
+ ------------------------------------------------------------------------------
+   Grand Totals     0.4720E+01          0.4000E-05          0.4725E+01
+ ------------------------------------------------------------------------------
+ ---------------------------------------------------
+ Triplets done: starting singlet calculation
+ ---------------------------------------------------
+ Iter    Rts Conv    Rts Left    Ttl Dev     Max Dev
+ ---------------------------------------------------
+ Job number = 39, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 39  <1-21|1-21>
+Storing 1411.87% of integrals
+  17         0           7      0.066486    0.013307
+ Job number = 39, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 39  <1-21|1-21>
+Storing 1411.87% of integrals
+  18         0           7      0.010960    0.002580
+ Job number = 39, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 39  <1-21|1-21>
+Storing 1411.87% of integrals
+  19         0           7      0.005189    0.001445
+ Job number = 39, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 39  <1-21|1-21>
+Storing 1411.87% of integrals
+  20         0           7      0.001084    0.000302
+ Job number = 39, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 39  <1-21|1-21>
+Storing 1411.87% of integrals
+  21         0           7      0.000288    0.000089
+ Job number = 39, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 39  <1-21|1-21>
+Storing 1411.87% of integrals
+  22         0           7      0.000056    0.000016
+ Job number = 39, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 39  <1-21|1-21>
+Storing 1411.87% of integrals
+  23         0           7      0.000009    0.000003
+ Job number = 39, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 39  <1-21|1-21>
+Storing 1411.87% of integrals
+  24         0           7      0.000001    0.000000
+ Job number = 39, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 39  <1-21|1-21>
+Storing 1411.87% of integrals
+  25         0           7      0.000000    0.000000
+ Job number = 39, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 39  <1-21|1-21>
+Storing 1411.87% of integrals
+  26         0           7      0.000000    0.000000
+ Job number = 39, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 39  <1-21|1-21>
+Storing 1411.87% of integrals
+  27         3           4      0.000000    0.000000
+ Job number = 39, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 39  <1-21|1-21>
+Storing 1411.87% of integrals
+  28         5           2      0.000000    0.000000
+ Job number = 39, Threshold = 1.00E-14
+Integral type ranges set in mkLRange.C for JobNum: 39  <1-21|1-21>
+Storing 1411.87% of integrals
+  29         7           0      0.000000    0.000000    Roots Converged
+ ------------------------------------------------------------------------------
+                     TDDFT/TDA     : Timing summary (seconds)
+ ------------------------------------------------------------------------------
+     job step          cpu (% of tot)      sys (% of tot)     wall (% of tot)
+ ------------------------------------------------------------------------------
+ ------------------------------------------------------------------------------
+   Grand Totals     0.3924E+01          0.2000E-05          0.3927E+01
+ ------------------------------------------------------------------------------
+ ---------------------------------------------------
+
+
+ ---------------------------------------------------
+           SF-XCIS Excitation Energies              
+ ---------------------------------------------------
+
+ Excited state   1: excitation energy (eV) =   -1.4642
+    Total energy for state   1:   -149.663268056593
+    <S**2>     :  2.0000
+    S(  1) --> S(  1) amplitude =  0.6977 spin-flip
+
+ Excited state   2: excitation energy (eV) =    0.1399
+    Total energy for state   2:   -149.604321051649
+    <S**2>     :  0.0000
+    S(  1) --> S(  1) amplitude =  0.7006 spin-flip
+
+ Excited state   3: excitation energy (eV) =    0.1399
+    Total energy for state   3:   -149.604321051649
+    <S**2>     :  0.0000
+    S(  1) --> S(  2) amplitude =  0.7006 spin-flip
+    S(  2) --> S(  1) amplitude =  0.7006 spin-flip
+
+ Excited state   4: excitation energy (eV) =    1.9528
+    Total energy for state   4:   -149.537696482618
+    <S**2>     :  0.0000
+    S(  1) --> S(  2) amplitude = -0.7033 spin-flip
+    S(  2) --> S(  1) amplitude =  0.7033 spin-flip
+
+ Excited state   5: excitation energy (eV) =    4.0121
+    Total energy for state   5:   -149.462020802891
+    <S**2>     :  0.0000
+    D(  6) --> S(  1) amplitude =  0.4980 spin-flip
+    D(  7) --> S(  2) amplitude =  0.4980 spin-flip
+
+ Excited state   6: excitation energy (eV) =    4.1633
+    Total energy for state   6:   -149.456463528499
+    <S**2>     :  2.0000
+    D(  6) --> S(  1) amplitude = -0.3064 spin-flip
+    D(  7) --> S(  1) amplitude = -0.3935 spin-flip
+    D(  6) --> S(  2) amplitude = -0.3935 spin-flip
+    D(  7) --> S(  2) amplitude =  0.3064 spin-flip
+
+ Excited state   7: excitation energy (eV) =    4.1633
+    Total energy for state   7:   -149.456463528499
+    <S**2>     :  2.0000
+    D(  6) --> S(  1) amplitude = -0.3935 spin-flip
+    D(  7) --> S(  1) amplitude =  0.3064 spin-flip
+    D(  6) --> S(  2) amplitude =  0.3064 spin-flip
+    D(  7) --> S(  2) amplitude =  0.3935 spin-flip
+
+ Excited state   8: excitation energy (eV) =    4.3756
+    Total energy for state   8:   -149.448659958048
+    <S**2>     :  2.0000
+    D(  7) --> S(  1) amplitude = -0.4989 spin-flip
+    D(  6) --> S(  2) amplitude =  0.4989 spin-flip
+
+ Excited state   9: excitation energy (eV) =    6.8506
+    Total energy for state   9:   -149.357707726226
+    <S**2>     :  2.0000
+    D(  5) --> S(  2) amplitude = -0.7029 spin-flip
+
+ Excited state  10: excitation energy (eV) =    6.8506
+    Total energy for state  10:   -149.357707726163
+    <S**2>     :  2.0000
+    D(  5) --> S(  1) amplitude = -0.7029 spin-flip
+
+ Excited state  11: excitation energy (eV) =    8.0880
+    Total energy for state  11:   -149.312233884521
+    <S**2>     :  2.0000
+    D(  6) --> S(  1) amplitude = -0.4637 spin-flip
+    D(  7) --> S(  2) amplitude = -0.4637 spin-flip
+
+ Excited state  12: excitation energy (eV) =   10.4856
+    Total energy for state  12:   -149.224120927259
+    <S**2>     :  0.0000
+    D(  7) --> S(  1) amplitude =  0.4631 spin-flip
+    D(  6) --> S(  2) amplitude =  0.4631 spin-flip
+    D(  5) --> V(  1) amplitude =  0.1523 alpha
+    S(  1) --> S(  2)                     spin-flip
+    D(  5) --> V(  1) amplitude =  0.1523 alpha
+    S(  2) --> S(  1)                     spin-flip
+
+ Excited state  13: excitation energy (eV) =   10.4856
+    Total energy for state  13:   -149.224120927259
+    <S**2>     :  0.0000
+    D(  6) --> S(  1) amplitude = -0.4631 spin-flip
+    D(  7) --> S(  2) amplitude =  0.4631 spin-flip
+    D(  5) --> V(  1) amplitude = -0.1523 alpha
+    S(  1) --> S(  1)                     spin-flip
+    D(  5) --> V(  1) amplitude =  0.1523 alpha
+    S(  2) --> S(  2)                     spin-flip
+
+ Excited state  14: excitation energy (eV) =   12.8354
+    Total energy for state  14:   -149.137770541871
+    <S**2>     :  0.0000
+    D(  7) --> S(  1) amplitude =  0.4596 spin-flip
+    D(  6) --> S(  2) amplitude = -0.4596 spin-flip
+    D(  5) --> V(  1) amplitude = -0.1672 alpha
+    S(  1) --> S(  2)                     spin-flip
+    D(  5) --> V(  1) amplitude =  0.1672 alpha
+    S(  2) --> S(  1)                     spin-flip
+
+ ---------------------------------------------------
+Symmetry turned back on
+  Timing summary (seconds)
+  CPU time          8.64s
+  System time       0.00s
+  Wall time         8.66s
+ ------------------------------------------------------------------------------
+                     CIS/TDDFT     : Timing summary (seconds)
+ ------------------------------------------------------------------------------
+     job step          cpu (% of tot)      sys (% of tot)     wall (% of tot)
+ ------------------------------------------------------------------------------
+ ------------------------------------------------------------------------------
+   Grand Totals     0.3924E+01          0.2000E-05          0.3927E+01
+ ------------------------------------------------------------------------------
+Symmetry turned off temporarily
+ Analysis of SCF Wavefunction
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+-20.747 -20.746  -1.714  -1.186  -0.767  -0.822  -0.822  -0.526
+ -0.526
+ -- Virtual --
+  0.441   1.068   1.061   1.061   1.140   1.171   1.171   1.309
+  1.955   2.365   2.365   2.626   2.626   2.946   2.946   3.169
+  3.657   3.657   4.172
+
+ Beta MOs
+ -- Occupied --
+-20.706 -20.705  -1.606  -1.004  -0.697  -0.588  -0.588
+ -- Virtual --
+  0.118   0.118   0.506   1.097   1.159   1.159   1.160   1.263
+  1.263   1.346   2.003   2.440   2.440   2.733   2.733   3.081
+  3.081   3.233   3.729   3.729   4.215
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 O                     0.000000
+      2 O                    -0.000000
+  ----------------------------------------
+  Sum of atomic charges =    -0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X       0.0000      Y      -0.0000      Z      -0.0000
+       Tot       0.0000
+    Quadrupole Moments (Debye-Ang)
+        XX      -9.8466     XY      -0.0000     YY      -9.8466
+        XZ      -0.0000     YZ      -0.0000     ZZ     -10.4727
+    Octopole Moments (Debye-Ang^2)
+       XXX       0.0000    XXY      -0.0000    XYY       0.0000
+       YYY      -0.0000    XXZ      -0.0000    XYZ      -0.0000
+       YYZ      -0.0000    XZZ       0.0000    YZZ       0.0000
+       ZZZ      -0.0000
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX      -6.4230   XXXY      -0.0000   XXYY      -2.1410
+      XYYY      -0.0000   YYYY      -6.4230   XXXZ      -0.0000
+      XXYZ      -0.0000   XYYZ      -0.0000   YYYZ      -0.0000
+      XXZZ      -5.8473   XYZZ      -0.0000   YYZZ      -5.8473
+      XZZZ       0.0000   YZZZ       0.0000   ZZZZ     -27.4603
+ -----------------------------------------------------------------
+ JobOver = TRUE
+Archival summary:
+1\1\sinatra\SP\ROHF\BasisUnspecified\2(3)\nmayhall\ThuNov1609:30:122017ThuNov1609:30:122017\0\\#,ROHF,BasisUnspecified,\\0,3\O\O,1,1.2\\HF=-149.609461\\@
+
+ Total job time:  9.24s(wall), 9.22s(cpu) 
+ Thu Nov 16 09:30:12 2017
+
+        *************************************************************
+        *                                                           *
+        *  Thank you very much for using Q-Chem.  Have a nice day.  *
+        *                                                           *
+        *************************************************************
+
+
+*** MISSION COMPLETED -- STARFLEET OUT ***
+
