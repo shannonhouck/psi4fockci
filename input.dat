@@ -2,8 +2,8 @@ import sys, os
 import glob
 sys.path.append('/Users/shannonhouck/psi4_spinflip_wfn')
 import spinflip
-import numpy as np
 from spinflip import sf_cas
+import numpy as np
 import psi4
 
 # setting up molecule
