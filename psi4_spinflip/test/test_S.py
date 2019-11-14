@@ -1,8 +1,6 @@
-import sys, os
 import psi4
-sys.path.insert(1, '../')
-import spinflip
-from spinflip import sf_cas
+import psi4_spinflip
+from psi4_spinflip import sf_cas
 
 # threshold for value equality
 threshold = 1e-7

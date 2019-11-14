@@ -69,8 +69,7 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
             'reference': 'rohf',
             'guess': 'sad',
             'maxiter': 1000,
-            'ci_maxiter': 50,
-            'mixed': False}
+            'ci_maxiter': 50 }
     opts.update(add_opts) # add additional options from user
 
     # run ROHF calculation on reference state or read it in

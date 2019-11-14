@@ -1,8 +1,7 @@
 import sys, os
 import glob
-sys.path.append('/Users/shannonhouck/psi4_spinflip_wfn')
-import spinflip
-from spinflip import sf_cas
+import psi4_spinflip
+from psi4_spinflip import sf_cas
 import numpy as np
 import psi4
 
@@ -23,6 +22,6 @@ psi4.set_options(opts)
 
 ref_e, ref_wfn = psi4.energy('scf', molecule=n2, return_wfn=True)
 
-e, ci_wfn, scf_wfn = sf_cas( charge, multiplicity, n2, conf_space="1x", add_opts=opts, return_rohf_wfn=True, return_ci_wfn=True, write_ci_vects=True, read_rohf_wfn=True, wfn_rohf_in=ref_wfn)
+e, ci_wfn, scf_wfn = sf_cas( charge, multiplicity, n2, conf_space="SD", add_opts=opts, return_rohf_wfn=True, return_ci_wfn=True, write_ci_vects=True, read_rohf_wfn=True, wfn_rohf_in=ref_wfn)
 
 
