@@ -1,6 +1,14 @@
 This code is a Python package that uses Psi4's DETCI module to run 
-Fock-space CI (RAS-nSF-IP/EA) calculations. Details about this method can 
-be found here. [TODO: LINK TO PAPER]
+Fock-space CI (RAS-nSF-IP/EA) calculations. The method handles spin and 
+spatial degeneracies in molecular systems by solving the orbitals of a 
+reference state that can be well-represented by a single determinant, and 
+then using non-particle-conserving and non-spin-conserving operators to 
+obtain the desired state. 
+`A more detailed description of the method itself can be found here.
+<The RAS-nSF-IP/EA Method>`_
+`Further details about this method, including examples and analysis, 
+can be found in this paper.
+<https://pubs.acs.org/doi/full/10.1021/acs.jctc.8b01268>`_
 
 Installation
 ============

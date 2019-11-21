@@ -5,9 +5,9 @@ import psi4
 
 # setting up molecule
 n2 = psi4.core.Molecule.from_string("""
-0 3
-O 0 0 0
-O 0 0 2.0
+0 7
+N 0 0 0
+N 0 0 2.5
 symmetry c1
 """)
 # set target charge and multiplicity
@@ -15,11 +15,9 @@ charge = 0
 multiplicity = 1
 
 # running the spin-flip calculation
-opts = {'basis': 'sto-3g', 'NUM_ROOTS': 3, 'reference': 'rohf', 'guess': 'gwh'}
+opts = {'basis': 'cc-pvdz', 'NUM_ROOTS': 4, 'reference': 'rohf'}
 psi4.set_options(opts)
 
-ref_e, ref_wfn = psi4.energy('scf', molecule=n2, return_wfn=True)
-
-e, ci_wfn, scf_wfn = sf_cas( charge, multiplicity, n2, conf_space="SD", add_opts=opts, return_rohf_wfn=True, return_ci_wfn=True, write_ci_vects=True, read_rohf_wfn=True, wfn_rohf_in=ref_wfn)
+e, ci_wfn, scf_wfn = sf_cas( charge, multiplicity, n2, conf_space="", add_opts=opts, return_rohf_wfn=True, return_ci_wfn=True)
 
 

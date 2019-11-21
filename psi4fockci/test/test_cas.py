@@ -1,6 +1,6 @@
 import psi4
-import psi4_spinflip
-from psi4_spinflip import sf_cas
+import psi4fockci
+from psi4fockci import sf_cas
 
 # threshold for value equality
 threshold = 1e-7
@@ -34,10 +34,9 @@ def test_3():
   assert (e - expected) < threshold
 
 # Test: SF-CAS/CC-PVDZ with N2 (0,7 to 0,1)
-# Don't have a reference value for this one yet!!
-#def test_4():
-#  options = {"basis": "cc-pvdz"}
-#  e = sf_cas( 0, 1, n2 )
-#  expected = ???
-#  assert (e - expected) < threshold
+def test_4():
+  options = {"basis": "cc-pvdz"}
+  e = sf_cas( 0, 1, n2 )
+  expected = -108.776024394853295
+  assert (e - expected) < threshold
 
