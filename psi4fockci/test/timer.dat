@@ -943,3 +943,121 @@ CIWave: s3                          :      0.000u      0.000s      0.000w      2
 | CIWave: s3_mt                     :      0.000u      0.000s      0.000w     42 calls
 
 **************************************************************************************
+
+Host: shannon-book.local
+
+Timers On : Thu Nov 21 15:19:07 2019
+Timers Off: Thu Nov 21 15:19:11 2019
+
+Wall Time:        4.05 seconds
+
+                                                       Time (seconds)
+Module                                       User      System        Wall        Calls
+Total PK formation time             :      0.083u      0.000s      0.054w      1 calls
+HF: Form core H                     :      0.000u      0.017s      0.003w      1 calls
+HF: Form S/X                        :      0.017u      0.000s      0.001w      1 calls
+HF: Guess                           :      0.050u      0.000s      0.033w      1 calls
+SAD Guess                           :      0.050u      0.000s      0.031w      1 calls
+HF: Form G                          :      0.017u      0.000s      0.004w     12 calls
+JK: D                               :      0.000u      0.000s      0.000w     12 calls
+JK: USO2AO                          :      0.000u      0.000s      0.000w     12 calls
+JK: JK                              :      0.017u      0.000s      0.004w     12 calls
+PK computes JK                      :      0.017u      0.000s      0.004w     12 calls
+JK: AO2USO                          :      0.000u      0.000s      0.000w     12 calls
+HF: Form F                          :      0.000u      0.000s      0.000w     12 calls
+HF: Form D                          :      0.000u      0.000s      0.000w     12 calls
+HF: DIIS                            :      0.000u      0.000s      0.002w     11 calls
+HF: Form C                          :      0.000u      0.000s      0.001w     11 calls
+CIWave: CIvect write                :      0.017u      0.050s      0.038w   1361 calls
+CIWave: CIvect read                 :      0.317u      1.383s      1.066w  65418 calls
+CIWave: s2                          :      0.400u      0.000s      0.237w    472 calls
+CIWave: s3                          :      0.917u      0.033s      0.540w    708 calls
+CIWave: s3_mt                       :      0.683u      0.000s      0.411w  17700 calls
+CIWave: s1                          :      0.083u      0.000s      0.029w    354 calls
+CIWave: opdm                        :      0.017u      0.017s      0.015w      2 calls
+
+--------------------------------------------------------------------------------------
+Total PK formation time             :      0.083u      0.000s      0.054w      1 calls
+HF: Form core H                     :      0.000u      0.017s      0.003w      1 calls
+HF: Form S/X                        :      0.017u      0.000s      0.001w      1 calls
+HF: Guess                           :      0.050u      0.000s      0.033w      1 calls
+| SAD Guess                         :      0.050u      0.000s      0.031w      1 calls
+HF: Form G                          :      0.017u      0.000s      0.004w     12 calls
+| JK: D                             :      0.000u      0.000s      0.000w     12 calls
+| JK: USO2AO                        :      0.000u      0.000s      0.000w     12 calls
+| JK: JK                            :      0.017u      0.000s      0.004w     12 calls
+| | PK computes JK                  :      0.017u      0.000s      0.004w     12 calls
+| JK: AO2USO                        :      0.000u      0.000s      0.000w     12 calls
+HF: Form F                          :      0.000u      0.000s      0.000w     12 calls
+HF: Form D                          :      0.000u      0.000s      0.000w     12 calls
+HF: DIIS                            :      0.000u      0.000s      0.002w     11 calls
+HF: Form C                          :      0.000u      0.000s      0.001w     11 calls
+CIWave: CIvect write                :      0.017u      0.050s      0.038w   1361 calls
+CIWave: CIvect read                 :      0.317u      1.383s      1.066w  65404 calls
+CIWave: s2                          :      0.400u      0.000s      0.237w    472 calls
+CIWave: s3                          :      0.917u      0.033s      0.540w    708 calls
+| CIWave: s3_mt                     :      0.683u      0.000s      0.411w  17700 calls
+CIWave: s1                          :      0.083u      0.000s      0.029w    354 calls
+CIWave: opdm                        :      0.017u      0.017s      0.015w      2 calls
+| CIWave: CIvect read               :      0.000u      0.000s      0.000w     14 calls
+
+**************************************************************************************
+
+Host: shannon-book.local
+
+Timers On : Thu Nov 21 15:21:02 2019
+Timers Off: Thu Nov 21 15:21:04 2019
+
+Wall Time:        1.96 seconds
+
+                                                       Time (seconds)
+Module                                       User      System        Wall        Calls
+Total PK formation time             :      0.100u      0.000s      0.058w      1 calls
+HF: Form core H                     :      0.000u      0.000s      0.003w      1 calls
+HF: Form S/X                        :      0.000u      0.000s      0.001w      1 calls
+HF: Guess                           :      0.050u      0.017s      0.033w      1 calls
+SAD Guess                           :      0.050u      0.017s      0.032w      1 calls
+HF: Form G                          :      0.000u      0.000s      0.005w     12 calls
+JK: D                               :      0.000u      0.000s      0.000w     12 calls
+JK: USO2AO                          :      0.000u      0.000s      0.000w     12 calls
+JK: JK                              :      0.000u      0.000s      0.005w     12 calls
+PK computes JK                      :      0.000u      0.000s      0.005w     12 calls
+JK: AO2USO                          :      0.000u      0.000s      0.000w     12 calls
+HF: Form F                          :      0.000u      0.000s      0.001w     12 calls
+HF: Form D                          :      0.000u      0.000s      0.000w     12 calls
+HF: DIIS                            :      0.000u      0.000s      0.003w     11 calls
+HF: Form C                          :      0.017u      0.000s      0.001w     11 calls
+CIWave: CIvect write                :      0.000u      0.050s      0.009w    279 calls
+CIWave: CIvect read                 :      0.050u      0.050s      0.060w   4224 calls
+CIWave: s2                          :      0.117u      0.000s      0.071w    124 calls
+CIWave: s3                          :      0.200u      0.017s      0.152w    186 calls
+CIWave: s3_mt                       :      0.150u      0.017s      0.116w   4650 calls
+CIWave: s1                          :      0.017u      0.000s      0.008w     93 calls
+CIWave: opdm                        :      0.017u      0.000s      0.007w      2 calls
+
+--------------------------------------------------------------------------------------
+Total PK formation time             :      0.100u      0.000s      0.058w      1 calls
+HF: Form core H                     :      0.000u      0.000s      0.003w      1 calls
+HF: Form S/X                        :      0.000u      0.000s      0.001w      1 calls
+HF: Guess                           :      0.050u      0.017s      0.033w      1 calls
+| SAD Guess                         :      0.050u      0.017s      0.032w      1 calls
+HF: Form G                          :      0.000u      0.000s      0.005w     12 calls
+| JK: D                             :      0.000u      0.000s      0.000w     12 calls
+| JK: USO2AO                        :      0.000u      0.000s      0.000w     12 calls
+| JK: JK                            :      0.000u      0.000s      0.005w     12 calls
+| | PK computes JK                  :      0.000u      0.000s      0.005w     12 calls
+| JK: AO2USO                        :      0.000u      0.000s      0.000w     12 calls
+HF: Form F                          :      0.000u      0.000s      0.001w     12 calls
+HF: Form D                          :      0.000u      0.000s      0.000w     12 calls
+HF: DIIS                            :      0.000u      0.000s      0.003w     11 calls
+HF: Form C                          :      0.017u      0.000s      0.001w     11 calls
+CIWave: CIvect write                :      0.000u      0.050s      0.009w    279 calls
+CIWave: CIvect read                 :      0.050u      0.050s      0.060w   4218 calls
+CIWave: s2                          :      0.117u      0.000s      0.071w    124 calls
+CIWave: s3                          :      0.200u      0.017s      0.152w    186 calls
+| CIWave: s3_mt                     :      0.150u      0.017s      0.116w   4650 calls
+CIWave: s1                          :      0.017u      0.000s      0.008w     93 calls
+CIWave: opdm                        :      0.017u      0.000s      0.007w      2 calls
+| CIWave: CIvect read               :      0.000u      0.000s      0.000w      6 calls
+
+**************************************************************************************
