@@ -1,12 +1,10 @@
-import sys, os
-import glob
-import psi4_spinflip
-from psi4_spinflip import sf_cas
+import psi4fockci
+from psi4fockci import sf_cas
 import numpy as np
 import psi4
 
 # setting up molecule
-n2 = psi4.core.Molecule.create_molecule_from_string("""
+n2 = psi4.core.Molecule.from_string("""
 0 3
 O 0 0 0
 O 0 0 2.0

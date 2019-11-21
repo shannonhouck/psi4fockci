@@ -1,22 +1,24 @@
-import sys, os
-import glob
-import shutil
-sys.path.insert(1, '/usr/local/psi4/lib')
+"""
+Does RAS-nSF-IP/EA.
+
+Runs a RAS-nSF-IP/EA calculation using Psi4's DETCI module.
+"""
 import psi4
-from psi4 import *
 import numpy as np
 import numpy.linalg as LIN
 
-# Used to compute various matrices...
-# Includes S^(1/2) and S^(-1/2).
-import numpy as np
-from numpy import linalg as LIN
-
-def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, return_ci_wfn=False, 
-            return_rohf_wfn=False, return_rohf_e=False, read_rohf_wfn=False, wfn_rohf_in=None,
-            write_rohf_wfn="", write_ci_vects=False, localize=False, frozen_docc=0, frozen_uocc=0):
+def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, 
+            return_ci_wfn=False, return_rohf_wfn=False, return_rohf_e=False, 
+            read_rohf_wfn=False, wfn_rohf_in=None, write_rohf_wfn="", 
+            write_ci_vects=False, localize=False, frozen_docc=0, frozen_uocc=0):
     """
-    A method to run a spin-flip electron addition calculation.
+    A method to run a RAS-nSF-IP/EA calculation.
+
+    This runs a RAS-nSF-IP/EA calculation using Psi4's DETCI module. The 
+    number of spin-flips and IP/EA is determined based on setting the 
+    ``new_charge`` and ``new_multiplicity`` of the desired target state.
+    Additional excitations are included by setting the ``conf_space`` 
+    keyword; excitations through the CISDT level are currently supported.
 
     Parameters
     ----------
@@ -27,8 +29,15 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
     ref_mol : psi4.core.Molecule
         Molecule to run the calculation on.
     conf_space : str ("")
-        Configuration space to use for CAS after spin-flip. 
-        Options "", "S", and "1x" are currently supported.
+        Option for including additional excitations outside of the CAS space. 
+        Defaults to CAS-nSF-IP/EA. Valid options include:
+            * ``""`` CAS-nSF-IP/EA
+            * ``"h"`` RAS(h)-nSF-IP/EA
+            * ``"p"`` RAS(p)-nSF-IP/EA
+            * ``"1x"`` RAS(h,p)-nSF-IP/EA
+            * ``"S"`` RAS(S)-nSF-IP/EA
+            * ``"SD"`` RAS(SD)-nSF-IP/EA
+            * ``"SDT"`` RAS(SDT)-nSF-IP/EA
     add_opts : dict ({})
         Additional options to pass into Psi4.
     return_ci_wfn : bool (False)
@@ -37,15 +46,14 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
         Whether to return the ROHF wavefunction object.
     return_rohf_e : bool (False)
         Whether to return the ROHF energy.
-    read_rohf_wfn : str ("")
-        Name of file (.npz) to read ROHF wavefunction info from.
-        By default, no wavefunction is read in.
+    read_rohf_wfn : bool (False)
+        Whether to read a Psi4 ROHF wavefunction.
+    rohf_wfn_in : psi4.core.Wavefunction
+        The Psi4 ROHF reference wavefunction (pre-computed).
     write_rohf_wfn : str ("")
-        Name of file (.npz) to read ROHF wavefunction info from.
-        By default, no wavefunction is written.
-        Note that you MUST run Psi4 with the -m (messy) flag for this to work!
+        Name of file (.npz) to write
     localize : bool (False)
-        Whether to perform BOYS localization on the RAS 2 space before computing.
+        Perform BOYS localization on the RAS 2 space before DETCI call?
         Can help with visualization and analysis of orbitals.
 
     Returns
@@ -58,9 +66,7 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
         (optional) The ROHF energy.
     return_rohf_wfn : psi4.core.Wavefunction
         (optional) The ROHF wavefunction.
-
     """
-
     # printing initial information about the calculation
     print("SF-CAS(%s) CALCULATION" % conf_space)
     # default options for Psi4
@@ -80,17 +86,22 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
     if(read_rohf_wfn):
         # set up options and run
         psi4.set_options(opts)
-        print("USING ROHF FROM REFERENCE...\tCHARGE %i\tMULT %i" %(ref_mol.molecular_charge(), ref_mol.multiplicity()))
+        print("USING ROHF FROM REFERENCE...\tCHARGE %i\tMULT %i" 
+              %(ref_mol.molecular_charge(), ref_mol.multiplicity()))
         wfn_rohf = wfn_rohf_in
         e_rohf = wfn_rohf.energy()
     # else, run ROHF on reference state
     else:
-        print("RUNNING REFERENCE...\tCHARGE %i\tMULT %i" %(ref_mol.molecular_charge(), ref_mol.multiplicity()))
-        e_rohf, wfn_rohf = energy('scf', molecule=mol, return_wfn=True, options=opts)
-        print("SCF (%i %i): %6.12f" %(mol.molecular_charge(), mol.multiplicity(), e_rohf))
+        print("RUNNING REFERENCE...\tCHARGE %i\tMULT %i" 
+              %(ref_mol.molecular_charge(), ref_mol.multiplicity()))
+        e_rohf, wfn_rohf = psi4.energy('scf', molecule=mol, return_wfn=True, 
+                                  options=opts)
+        print("SCF (%i %i): %6.12f" 
+              %(mol.molecular_charge(), mol.multiplicity(), e_rohf))
 
     # change charge and multiplicity to new target values
-    print("DOING SPIN-FLIP: CHARGE %i, MULTIPLICITY %i" % (new_charge, new_multiplicity))
+    print("DOING SPIN-FLIP: CHARGE %i, MULTIPLICITY %i" 
+          % (new_charge, new_multiplicity))
 
     # saving npz file of wavefunction
     if(write_rohf_wfn != ""):
@@ -111,7 +122,7 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
     n_total = wfn_rohf.nalpha() + wfn_rohf.nbeta() + del_electrons
     # set orbital occupations
     wfn_rohf.force_soccpi(psi4.core.Dimension([new_soccpi]))
-    wfn_rohf.force_doccpi(psi4.core.Dimension([(int)((n_total - new_soccpi)/2)]))
+    wfn_rohf.force_doccpi(psi4.core.Dimension([(int)((n_total-new_soccpi)/2)]))
 
     # if we need to localize...
     if(localize):
@@ -119,7 +130,8 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
         ras1_C = C[:, :doccpi]
         ras2_C = C[:, doccpi:doccpi+soccpi]
         ras3_C = C[:, doccpi+soccpi:]
-        loc = psi4.core.Localizer.build('BOYS', wfn_rohf.basisset(), psi4.core.Matrix.from_array(ras2_C))
+        loc = psi4.core.Localizer.build('BOYS', wfn_rohf.basisset(), 
+                                        psi4.core.Matrix.from_array(ras2_C))
         loc.localize()
         ras2_localized = psi4.core.Matrix.to_array(loc.L, copy=True)
         localized_orbs = np.column_stack((ras1_C, ras2_localized, ras3_C))
@@ -206,10 +218,13 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={}, r
       exit()
 
     # run cas
-    print("RUNNING CAS...\t\tCHARGE %i\tMULT %i" %(mol.molecular_charge(), mol.multiplicity()))
+    print("RUNNING CAS...\t\tCHARGE %i\tMULT %i" 
+          %(mol.molecular_charge(), mol.multiplicity()))
     psi4.set_options(opts)
-    e_cas, wfn_cas = energy('detci', ref_wfn=wfn_rohf, return_wfn=True, molecule=mol)
-    print("CAS (%i %i): %6.12f" %(mol.molecular_charge(), mol.multiplicity(), e_cas))
+    e_cas, wfn_cas = psi4.energy('detci', ref_wfn=wfn_rohf, return_wfn=True, 
+                            molecule=mol)
+    print("CAS (%i %i): %6.12f" 
+          %(mol.molecular_charge(), mol.multiplicity(), e_cas))
 
     # obtain eigenvectors if needed
     # partly based on Daniel Smith's answer on Psi4 forums

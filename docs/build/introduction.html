@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Installation &#8212; Psi4FockCI 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="index.html">
+          <span>Psi4FockCI 1.0 documentation</span></a></h1>
+        <h2 class="heading"><span>Installation</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        <a class="uplink" href="index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content" role="main">
+        
+        
+  <p>This code is a Python package that uses Psi4’s DETCI module to run
+Fock-space CI (RAS-nSF-IP/EA) calculations. Details about this method can
+be found here. [TODO: LINK TO PAPER]</p>
+<div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<p>Clone the program from the GitHub repository:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/shannonhouck/psi4_spinflip_wfn.git
+</pre></div>
+</div>
+<p>Then navigate into the directory and use pip to install:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cd psi4_spinflip_wfn
+$ pip install -e .
+</pre></div>
+</div>
+<p>You can import this as a Python package and use it however you want!
+If you have pytest installed, you can use it to test your installation:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cd psi4fockci
+$ pytest
+</pre></div>
+</div>
+</div>
+<div class="section" id="running-cas-nsf-ip-ea">
+<h1>Running CAS-nSF-IP/EA<a class="headerlink" href="#running-cas-nsf-ip-ea" title="Permalink to this headline">¶</a></h1>
+<p>The program is primarily run through the <code class="docutils literal notranslate"><span class="pre">sf_cas</span></code> function call. The
+function should be run as follows:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Initialize a Psi4.core.Molecule object with the correct
+reference charge/multiplicity.</p></li>
+<li><p>Determine the target charge/multiplicity.</p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">sf_cas</span></code>.</p></li>
+</ol>
+</div></blockquote>
+<p>In order to run a 1SF-CAS/STO-3G 2-SF 1-IP calculation on N2+, one
+could set an input file up as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">psi4</span>
+<span class="kn">import</span> <span class="nn">spinflip</span>
+<span class="kn">from</span> <span class="nn">spinflip</span> <span class="k">import</span> <span class="n">sf_cas</span>
+
+<span class="c1"># setting up molecule</span>
+<span class="n">n2</span> <span class="o">=</span> <span class="n">psi4</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Molecule</span><span class="o">.</span><span class="n">create_molecule_from_string</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">0 7</span>
+<span class="s2">N 0 0 0</span>
+<span class="s2">N 0 0 2.5</span>
+<span class="s2">symmetry c1</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+
+<span class="c1"># set target charge and multiplicity</span>
+<span class="n">charge</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">multiplicity</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="c1"># set up additional options</span>
+<span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;basis&quot;</span><span class="p">:</span> <span class="s2">&quot;sto-3g&quot;</span><span class="p">}</span>
+
+<span class="c1"># run SF-CAS</span>
+<span class="n">e</span> <span class="o">=</span> <span class="n">sf_cas</span><span class="p">(</span> <span class="n">charge</span><span class="p">,</span> <span class="n">multiplicity</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">conf_space</span><span class="o">=</span><span class="s2">&quot;&quot;</span> <span class="p">,</span> <span class="n">add_opts</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This file can subsequently be run from the command line:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python example.dat
+</pre></div>
+</div>
+<p>All relevant information is written to standard output.</p>
+</div>
+<div class="section" id="passing-keywords-to-psi4">
+<h1>Passing Keywords to Psi4<a class="headerlink" href="#passing-keywords-to-psi4" title="Permalink to this headline">¶</a></h1>
+<p>Additional keywords can be passed to Psi4 using the <code class="docutils literal notranslate"><span class="pre">add_opts</span></code> keyword.
+These options should be put in the dictionary form usually taken by Psi4.
+For example, if I wanted to change the number of CI roots, I could specify
+it as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;basis&quot;</span><span class="p">:</span> <span class="s2">&quot;sto-3g&quot;</span><span class="p">,</span> <span class="s2">&quot;num_roots&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">}</span>
+<span class="n">e</span> <span class="o">=</span> <span class="n">sf_cas</span><span class="p">(</span> <span class="n">charge</span><span class="p">,</span> <span class="n">multiplicity</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">conf_space</span><span class="o">=</span><span class="s2">&quot;&quot;</span> <span class="p">,</span> <span class="n">add_opts</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="adding-excitations">
+<h1>Adding Excitations<a class="headerlink" href="#adding-excitations" title="Permalink to this headline">¶</a></h1>
+<p>Excitations are important, particularly for the nSF-IP/EA schemes.
+(Hole excitations are recommended for IP-type and particle excitations
+are recommended for EA-type; see the paper for details.)
+Excitations outside of the CAS space can be requested by setting the
+<code class="docutils literal notranslate"><span class="pre">conf_space</span></code> keyword appropriately. The following keywords are valid:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code> CAS-nSF-IP/EA (no additional excitations)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;h&quot;</span></code> RAS(h)-nSF-IP/EA (hole excitations)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;p&quot;</span></code> RAS(p)-nSF-IP/EA (particle excitations)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;S&quot;</span></code> RAS(S)-nSF-IP/EA (singles)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;SD&quot;</span></code> RAS(SD)-nSF-IP/EA (singles and doubles)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;SDT&quot;</span></code> RAS(SDT)-nSF-IP/EA (singles, doubles, and triples)</p></li>
+</ul>
+</div></blockquote>
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        <a class="uplink" href="index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Shannon E. Houck.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>
