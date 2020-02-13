@@ -73,6 +73,7 @@ def sf_cas( new_charge, new_multiplicity, ref_mol, conf_space="", add_opts={},
     opts = {'scf_type': 'pk',
             'basis': 'cc-pvdz',
             'reference': 'rohf',
+            'mixed': False,
             'maxiter': 1000,
             'ci_maxiter': 50 }
     opts.update(add_opts) # add additional options from user
