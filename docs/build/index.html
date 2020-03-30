@@ -105,7 +105,7 @@ These options should be put in the dictionary form usually taken by Psi4.
 For example, if I wanted to change the number of CI roots, I could specify
 it as follows:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;basis&quot;</span><span class="p">:</span> <span class="s2">&quot;sto-3g&quot;</span><span class="p">,</span> <span class="s2">&quot;num_roots&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">}</span>
-<span class="n">e</span> <span class="o">=</span> <span class="n">sf_cas</span><span class="p">(</span> <span class="n">charge</span><span class="p">,</span> <span class="n">multiplicity</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">conf_space</span><span class="o">=</span><span class="s2">&quot;&quot;</span> <span class="p">,</span> <span class="n">add_opts</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
+<span class="n">e</span> <span class="o">=</span> <span class="n">psi4</span><span class="o">.</span><span class="n">energy</span><span class="p">(</span><span class="s1">&#39;psi4fockci&#39;</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">new_charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">new_multiplicity</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">add_opts</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -127,8 +127,7 @@ Excitations outside of the CAS space can be requested by setting the
 </ul>
 </div></blockquote>
 <span class="target" id="module-psi4fockci"></span><p>A program for running RAS-SF-IP/EA using Psi4.</p>
-<p>This program runs RAS-nSF-IP/EA using Psi4’s DETCI module. The 
-program is primarily run through the sf_cas function call.</p>
+<p>This program runs RAS-nSF-IP/EA using Psi4’s DETCI module.</p>
 </div>
 <div class="section" id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>

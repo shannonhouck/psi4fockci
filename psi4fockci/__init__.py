@@ -33,9 +33,7 @@
 """
 A program for running RAS-SF-IP/EA using Psi4.
 
-
-This program runs RAS-nSF-IP/EA using Psi4's DETCI module. The 
-program is primarily run through the sf_cas function call.
+This program runs RAS-nSF-IP/EA using Psi4's DETCI module.
 """
 __version__ = '0.1'
 __author__  = 'Shannon E. Houck'

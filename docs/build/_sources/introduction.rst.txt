@@ -75,7 +75,7 @@ For example, if I wanted to change the number of CI roots, I could specify
 it as follows::
 
     options = {"basis": "sto-3g", "num_roots": 10}
-    e = sf_cas( charge, multiplicity, n2, conf_space="" , add_opts=options)
+    e = psi4.energy('psi4fockci', n2, new_charge=0, new_multiplicity=5, add_opts=options)
 
 Adding Excitations
 ==================
