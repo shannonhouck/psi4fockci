@@ -15,11 +15,11 @@ Installation
 
 Clone the program from the GitHub repository::
 
-    $ git clone https://github.com/shannonhouck/psi4_spinflip_wfn.git
+    $ git clone https://github.com/shannonhouck/psi4fockci.git
 
 Then navigate into the directory and use pip to install::
 
-    $ cd psi4_spinflip_wfn
+    $ cd psi4fockci
     $ pip install -e .
 
 You can import this as a Python package and use it however you want! 
@@ -31,49 +31,45 @@ If you have pytest installed, you can use it to test your installation::
 Running CAS-nSF-IP/EA
 =====================
 
-The program is primarily run through the ``sf_cas`` function call. The 
-function should be run as follows:
+The plugin can be run directly through Psi4's energy() call, as with 
+any Psi4 plugin. The number of spin-flips and IP/EA to perform are 
+determined automatically based on the given charge and multiplicity 
+of the target state. In order to run a CAS-1SF-IP/STO-3G calculation, 
+for example, one could set an input file up in the following way::
 
-    1. Initialize a Psi4.core.Molecule object with the correct 
-       reference charge/multiplicity.
-    2. Determine the target charge/multiplicity.
-    3. Run ``sf_cas``.
-
-In order to run a 1SF-CAS/STO-3G 2-SF 1-IP calculation on N2+, one 
-could set an input file up as follows::
-
-    import psi4
-    import spinflip
-    from spinflip import sf_cas
-
-    # setting up molecule
-    n2 = psi4.core.Molecule.create_molecule_from_string("""
+    molecule {
     0 7
-    N 0 0 0
-    N 0 0 2.5
+    N 0.0 0.0 0.0
+    N 0.0 0.0 1.3
     symmetry c1
-    """)
+    }
 
-    # set target charge and multiplicity
-    charge = 1
-    multiplicity = 2
+    set {
+      basis cc-pVDZ
+    }
 
-    # set up additional options
-    options = {"basis": "sto-3g"}
+    energy('psi4fockci', new_charge=1, new_multiplicity=1)
 
-    # run SF-CAS
-    e = sf_cas( charge, multiplicity, n2, conf_space="" , add_opts=options)
+The input file can then be fun from the command line::
 
-This file can subsequently be run from the command line::
+    $ psi4 example.dat
 
-    $ python example.dat
-
-All relevant information is written to standard output.
+The program can also be run through the ``run_psi4fockci`` function call.
+See the documentation of that function for information about the various 
+options and keywords.
 
 Passing Keywords to Psi4
 ========================
 
-Additional keywords can be passed to Psi4 using the ``add_opts`` keyword. 
+If running with Psi4, keywords for various modules can be set as normal 
+in the input file::
+
+    set detci {
+      ci_maxiter 500
+      num_roots 7
+    }
+
+Alternately, keywords can be passed to Psi4 using the ``add_opts`` keyword. 
 These options should be put in the dictionary form usually taken by Psi4. 
 For example, if I wanted to change the number of CI roots, I could specify 
 it as follows::
@@ -90,7 +86,7 @@ are recommended for EA-type; see the paper for details.)
 Excitations outside of the CAS space can be requested by setting the 
 ``conf_space`` keyword appropriately. The following keywords are valid:
 
-    * ``""`` CAS-nSF-IP/EA (no additional excitations)
+    * ``""`` CAS-nSF-IP/EA (default, no additional excitations)
     * ``"h"`` RAS(h)-nSF-IP/EA (hole excitations)
     * ``"p"`` RAS(p)-nSF-IP/EA (particle excitations)
     * ``"S"`` RAS(S)-nSF-IP/EA (singles)

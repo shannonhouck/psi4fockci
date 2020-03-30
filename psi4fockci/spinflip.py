@@ -1,8 +1,3 @@
-"""
-Does RAS-nSF-IP/EA.
-
-Runs a RAS-nSF-IP/EA calculation using Psi4's DETCI module.
-"""
 import psi4
 import psi4.driver.p4util as p4util
 import numpy as np

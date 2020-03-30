@@ -7,11 +7,11 @@
     <title>psi4fockci package &#8212; Psi4FockCI 1.0 documentation</title>
     <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
   </head><body>
@@ -36,11 +36,9 @@
 </div>
 <div class="section" id="module-psi4fockci.spinflip">
 <span id="psi4fockci-spinflip-module"></span><h2>psi4fockci.spinflip module<a class="headerlink" href="#module-psi4fockci.spinflip" title="Permalink to this headline">¶</a></h2>
-<p>Does RAS-nSF-IP/EA.</p>
-<p>Runs a RAS-nSF-IP/EA calculation using Psi4’s DETCI module.</p>
 <dl class="function">
-<dt id="psi4fockci.spinflip.sf_cas">
-<code class="sig-prename descclassname">psi4fockci.spinflip.</code><code class="sig-name descname">sf_cas</code><span class="sig-paren">(</span><em class="sig-param">new_charge</em>, <em class="sig-param">new_multiplicity</em>, <em class="sig-param">ref_mol</em>, <em class="sig-param">conf_space=''</em>, <em class="sig-param">add_opts={}</em>, <em class="sig-param">return_ci_wfn=False</em>, <em class="sig-param">return_rohf_wfn=False</em>, <em class="sig-param">return_rohf_e=False</em>, <em class="sig-param">read_rohf_wfn=False</em>, <em class="sig-param">wfn_rohf_in=None</em>, <em class="sig-param">write_rohf_wfn=''</em>, <em class="sig-param">write_ci_vects=False</em>, <em class="sig-param">localize=False</em>, <em class="sig-param">frozen_docc=0</em>, <em class="sig-param">frozen_uocc=0</em><span class="sig-paren">)</span><a class="headerlink" href="#psi4fockci.spinflip.sf_cas" title="Permalink to this definition">¶</a></dt>
+<dt id="psi4fockci.spinflip.run_psi4fockci">
+<code class="sig-prename descclassname">psi4fockci.spinflip.</code><code class="sig-name descname">run_psi4fockci</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">molecule</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#psi4fockci.spinflip.run_psi4fockci" title="Permalink to this definition">¶</a></dt>
 <dd><p>A method to run a RAS-nSF-IP/EA calculation.</p>
 <p>This runs a RAS-nSF-IP/EA calculation using Psi4’s DETCI module. The 
 number of spin-flips and IP/EA is determined based on setting the 
@@ -48,11 +46,13 @@ number of spin-flips and IP/EA is determined based on setting the
 Additional excitations are included by setting the <code class="docutils literal notranslate"><span class="pre">conf_space</span></code> 
 keyword; excitations through the CISDT level are currently supported.</p>
 <dl>
+<dt>name<span class="classifier">str</span></dt><dd><p>Name of method (for Psi4 interfacing)</p>
+</dd>
+<dt>molecule<span class="classifier">psi4.core.Molecule</span></dt><dd><p>Molecule to run the calculation on.</p>
+</dd>
 <dt>new_charge<span class="classifier">int</span></dt><dd><p>Target charge of the molecule.</p>
 </dd>
 <dt>new_multiplicity<span class="classifier">int</span></dt><dd><p>Target multiplicity of the molecule.</p>
-</dd>
-<dt>ref_mol<span class="classifier">psi4.core.Molecule</span></dt><dd><p>Molecule to run the calculation on.</p>
 </dd>
 <dt>conf_space<span class="classifier">str (“”)</span></dt><dd><p>Option for including additional excitations outside of the CAS space. 
 Defaults to CAS-nSF-IP/EA. Valid options include:</p>
@@ -85,15 +85,13 @@ Defaults to CAS-nSF-IP/EA. Valid options include:</p>
 <dt>localize<span class="classifier">bool (False)</span></dt><dd><p>Perform BOYS localization on the RAS 2 space before DETCI call?
 Can help with visualization and analysis of orbitals.</p>
 </dd>
+<dt>frozen_docc<span class="classifier">int (0)</span></dt><dd><p>Number of frozen core orbitals.</p>
+</dd>
+<dt>frozen_vir<span class="classifier">int (0)</span></dt><dd><p>Number of frozen virtual orbitals.</p>
+</dd>
 </dl>
 <dl class="simple">
-<dt>e_ci<span class="classifier">double</span></dt><dd><p>The SF-CAS([conf_space]) energy.</p>
-</dd>
-<dt>return_ci_wfn<span class="classifier">psi4.core.Wavefunction</span></dt><dd><p>(optional) The SF-CAS([conf_space]) wavefunction.</p>
-</dd>
-<dt>return_rohf_e<span class="classifier">double</span></dt><dd><p>(optional) The ROHF energy.</p>
-</dd>
-<dt>return_rohf_wfn<span class="classifier">psi4.core.Wavefunction</span></dt><dd><p>(optional) The ROHF wavefunction.</p>
+<dt>return_ci_wfn<span class="classifier">psi4.core.Wavefunction</span></dt><dd><p>The SF-CAS([conf_space]) wavefunction.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -119,7 +117,7 @@ program is primarily run through the sf_cas function call.</p>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, Shannon E. Houck.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
   </body>
 </html>
