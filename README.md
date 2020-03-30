@@ -1,6 +1,6 @@
 # Psi4FockCI
 
-<img src="https://travis-ci.com/shannonhouck/psi4_spinflip_wfn.svg?token=yXoAYb1Qe6BWq8AUXzXG&branch=master">
+<img src="https://travis-ci.com/shannonhouck/psi4fockci.svg?branch=master">
 
 Code Author: Shannon E. Houck
 

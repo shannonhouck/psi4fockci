@@ -100,6 +100,7 @@ def run_psi4fockci(name, molecule, **kwargs):
     # default options for Psi4
     opts = {'scf_type': 'pk',
             'reference': 'rohf',
+            'mixed': False,
             'maxiter': 1000,
             'ci_maxiter': 50 }
     opts.update(add_opts) # add additional options from user
