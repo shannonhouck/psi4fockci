@@ -1,6 +1,6 @@
 import psi4
 import psi4fockci
-from psi4fockci import sf_cas
+from psi4fockci import run_psi4fockci
 
 # threshold for value equality
 threshold = 1e-7
@@ -12,10 +12,15 @@ O 1 1.2
 symmetry c1
 """)
 
-# Test: RAS(S)-1SF/6-31G with O2 (0,3 to 0,1)
+# Test: RAS(S)-1SF/CC-PVDZ with O3
 def test_1():
-  options = {"basis": "6-31G", "num_roots": 4}
-  e = sf_cas( 0, 1, o2, conf_space="S", add_opts=options, localize=True )
-  expected = -149.506943097607547
-  assert (e - expected) < threshold
+    psi4.core.clean()
+    psi4.core.clean_options()
+    psi4.core.clean_variables()
+    options = {"basis": "cc-pvdz"}
+    wfn = run_psi4fockci('psi4fockci', o2, new_charge=0, new_multiplicity=1, 
+        conf_space="S", add_opts=options)
+    e = psi4.core.get_variable("CI ROOT 0 TOTAL ENERGY")
+    expected = -149.506943097607547
+    assert (e - expected) < threshold
 
