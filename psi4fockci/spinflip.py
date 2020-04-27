@@ -243,7 +243,7 @@ def run_psi4fockci(name, molecule, **kwargs):
         opts.update({'frozen_docc': [0]})
         opts.update({'ex_level': 3})
         opts.update({'frozen_docc': [frozen_docc]})
-        opts.update({'ras1': [ras2 - frozen_docc]})
+        opts.update({'ras1': [ras1 - frozen_docc]})
         opts.update({'ras2': [ras2]})
         opts.update({'ras3': [ras3 - frozen_uocc]})
         opts.update({'frozen_uocc': [frozen_uocc]})
