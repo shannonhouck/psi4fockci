@@ -141,6 +141,19 @@ def run_psi4fockci(name, molecule, **kwargs):
     wfn_rohf.force_soccpi(psi4.core.Dimension([new_soccpi]))
     wfn_rohf.force_doccpi(psi4.core.Dimension([(int)((n_total-new_soccpi)/2)]))
 
+    # set up RAS1, RAS2, RAS3 spaces
+    ras1 = doccpi
+    ras2 = soccpi
+    ras3 = nmo - soccpi - doccpi
+
+    # add/remove orbitals to active space
+    if('add_orbs_ras1' in kwargs):
+        ras1 = ras1 - kwargs['add_orbs_ras1']
+        ras2 = ras2 + kwargs['add_orbs_ras1']
+    if('add_orbs_ras3' in kwargs):
+        ras3 = ras3 - kwargs['add_orbs_ras3']
+        ras2 = ras2 + kwargs['add_orbs_ras3']
+
     # if we need to localize...
     if(localize):
         C = psi4.core.Matrix.to_array(wfn_rohf.Ca(), copy=True)
@@ -170,7 +183,7 @@ def run_psi4fockci(name, molecule, **kwargs):
     if(conf_space == "" or conf_space == "CAS"):
         opts.update({'frozen_docc': [doccpi]})
         opts.update({'ras1': [0]})
-        opts.update({'ras2': [soccpi]})
+        opts.update({'ras2': [ras2]})
         opts.update({'ras3': [0]})
         opts.update({'ras4': [0]})
     # just (h) excitations
@@ -179,8 +192,8 @@ def run_psi4fockci(name, molecule, **kwargs):
         opts.update({'val_ex_level': 1})
         opts.update({'ras3_max': 0})
         opts.update({'frozen_docc': [frozen_docc]})
-        opts.update({'ras1': [doccpi - frozen_docc]})
-        opts.update({'ras2': [soccpi]})
+        opts.update({'ras1': [ras1 - frozen_docc]})
+        opts.update({'ras2': [ras2]})
         opts.update({'ras3': [0]})
         opts.update({'ras4': [0]})
     # just (p) excitations
@@ -190,8 +203,8 @@ def run_psi4fockci(name, molecule, **kwargs):
         opts.update({'ras3_max': 1})
         opts.update({'frozen_docc': [doccpi]})
         opts.update({'ras1': [0]})
-        opts.update({'ras2': [soccpi]})
-        opts.update({'ras3': [nmo - soccpi - doccpi - frozen_uocc]})
+        opts.update({'ras2': [ras2]})
+        opts.update({'ras3': [ras3 - frozen_uocc]})
         opts.update({'frozen_uocc': [frozen_uocc]})
         opts.update({'ras4': [0]})
     # 1x configuration space
@@ -202,38 +215,37 @@ def run_psi4fockci(name, molecule, **kwargs):
         opts.update({'val_ex_level': 1})
         opts.update({'ras3_max': 1})
         opts.update({'frozen_docc': [frozen_docc]})
-        opts.update({'ras1': [doccpi - frozen_docc]})
-        opts.update({'ras2': [soccpi]})
-        opts.update({'ras3': [nmo - soccpi - doccpi - frozen_uocc]})
+        opts.update({'ras1': [ras1 - frozen_docc]})
+        opts.update({'ras2': [ras2]})
+        opts.update({'ras3': [ras3 - frozen_uocc]})
         opts.update({'frozen_uocc': [frozen_uocc]})
         opts.update({'ras4': [0]})
     # S configuration space
     # includes (h, p, hp) excitations
     elif(conf_space == "s"):
-        opts.update({'frozen_docc': [0]})
         opts.update({'ex_level': 1})
         opts.update({'frozen_docc': [frozen_docc]})
-        opts.update({'ras1': [doccpi - frozen_docc]})
-        opts.update({'ras2': [soccpi]})
-        opts.update({'ras3': [nmo - soccpi - doccpi - frozen_uocc]})
+        opts.update({'ras1': [ras1 - frozen_docc]})
+        opts.update({'ras2': [ras2]})
+        opts.update({'ras3': [ras3 - frozen_uocc]})
         opts.update({'frozen_uocc': [frozen_uocc]})
         opts.update({'ras4': [0]})
     elif(conf_space == "sd"):
         opts.update({'frozen_docc': [0]})
         opts.update({'ex_level': 2})
         opts.update({'frozen_docc': [frozen_docc]})
-        opts.update({'ras1': [doccpi - frozen_docc]})
-        opts.update({'ras2': [soccpi]})
-        opts.update({'ras3': [nmo - soccpi - doccpi - frozen_uocc]})
+        opts.update({'ras1': [ras1 - frozen_docc]})
+        opts.update({'ras2': [ras2]})
+        opts.update({'ras3': [ras3 - frozen_uocc]})
         opts.update({'frozen_uocc': [frozen_uocc]})
         opts.update({'ras4': [0]})
     elif(conf_space == "sdt"):
         opts.update({'frozen_docc': [0]})
         opts.update({'ex_level': 3})
         opts.update({'frozen_docc': [frozen_docc]})
-        opts.update({'ras1': [doccpi - frozen_docc]})
-        opts.update({'ras2': [soccpi]})
-        opts.update({'ras3': [nmo - soccpi - doccpi - frozen_uocc]})
+        opts.update({'ras1': [ras2 - frozen_docc]})
+        opts.update({'ras2': [ras2]})
+        opts.update({'ras3': [ras3 - frozen_uocc]})
         opts.update({'frozen_uocc': [frozen_uocc]})
         opts.update({'ras4': [0]})
     # Other configuration spaces aren't supported yet
