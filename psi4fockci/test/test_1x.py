@@ -20,7 +20,7 @@ def test_1():
     options = {"basis": "cc-pvdz", 'num_roots': 4, 'diis_start': 20, 'ci_maxiter': 100}
     wfn = run_psi4fockci('psi4fockci', n2, new_charge=0, new_multiplicity=1,
         conf_space="1x", add_opts=options)
-    e = psi4.core.get_variable("CI ROOT 0 TOTAL ENERGY")
+    e = psi4.core.variable("CI ROOT 0 TOTAL ENERGY")
     expected = -108.780110376393
     assert (e - expected) < threshold
 

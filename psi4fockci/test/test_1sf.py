@@ -20,7 +20,7 @@ def test_1():
     options = {"basis": "sto-3g"}
     wfn = run_psi4fockci('psi4fockci', n2, new_charge=0, new_multiplicity=1, 
         add_opts=options )
-    e = psi4.core.get_variable("CI ROOT 0 TOTAL ENERGY")
+    e = psi4.core.variable("CI ROOT 0 TOTAL ENERGY")
     expected = -107.439176904454
     assert (e - expected) < threshold
 
@@ -32,7 +32,7 @@ def test_2():
     options = {"basis": "sto-3g"}
     wfn = run_psi4fockci('psi4fockci', n2, new_charge=0, new_multiplicity=3, 
         add_opts=options )
-    e = psi4.core.get_variable("CI ROOT 0 TOTAL ENERGY")
+    e = psi4.core.variable("CI ROOT 0 TOTAL ENERGY")
     expected = -107.437970126831
     assert (e - expected) < threshold
 
@@ -44,7 +44,7 @@ def test_3():
     options = {"basis": "cc-pvdz"}
     wfn = run_psi4fockci('psi4fockci', n2, new_charge=0, new_multiplicity=1,
         add_opts=options )
-    e = psi4.core.get_variable("CI ROOT 0 TOTAL ENERGY")
+    e = psi4.core.variable("CI ROOT 0 TOTAL ENERGY")
     expected = -108.776024394853295
     assert (e - expected) < threshold
 

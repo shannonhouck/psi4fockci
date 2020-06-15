@@ -20,7 +20,7 @@ def test_1():
     options = {"basis": "6-31G", "num_roots": 4}
     wfn = run_psi4fockci('psi4fockci', o2, new_charge=0, new_multiplicity=1,
         conf_space="SD", add_opts=options)
-    e = psi4.core.get_variable("CI ROOT 0 TOTAL ENERGY")
+    e = psi4.core.variable("CI ROOT 0 TOTAL ENERGY")
     expected = -149.718816902769930
     assert (e - expected) < threshold
 
