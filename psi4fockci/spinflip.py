@@ -138,8 +138,7 @@ def run_psi4fockci(name, molecule, **kwargs):
     del_electrons = ref_mol.molecular_charge() - mol.molecular_charge()
     n_total = wfn_rohf.nalpha() + wfn_rohf.nbeta() + del_electrons
     # set orbital occupations
-    wfn_rohf.force_soccpi(psi4.core.Dimension([new_soccpi]))
-    wfn_rohf.force_doccpi(psi4.core.Dimension([(int)((n_total-new_soccpi)/2)]))
+    wfn_rohf.force_occpi(psi4.core.Dimension([(int)((n_total-new_soccpi)/2)]), psi4.core.Dimension([new_soccpi]))
 
     # set up RAS1, RAS2, RAS3 spaces
     ras1 = doccpi
